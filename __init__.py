@@ -1,4 +1,5 @@
 from datetime import datetime
+from models.cultivation import Cultivation
 import os
 from pprint import pprint
 
@@ -20,6 +21,7 @@ app.config.from_object(Config)
 pymongo = PyMongo(app)
 
 users: Collection = pymongo.db.users
+cultivations: Collection = pymongo.db.cultivations
 
 @app.errorhandler(404)
 def resource_not_found(e):
@@ -82,5 +84,14 @@ def new_user():
     print(user)
 
     return user.to_json()
+
+@app.route("/cultivations/new", methods=["POST"])
+def new_cultivation():
+    raw_cultivation = request.get_json()
+
+    cultivation = Cultivation(**raw_cultivation)
+    cultivations.insert_one(cultivation.to_bson())
+
+    return cultivation.to_json()
 
 app.run()
