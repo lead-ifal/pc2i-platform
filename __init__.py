@@ -5,6 +5,7 @@ from pprint import pprint
 
 from flask import Flask, request, url_for, jsonify
 from flask_pymongo import PyMongo
+from flask_cors import CORS
 from pymongo.collection import Collection, ReturnDocument
 from pymongo.errors import DuplicateKeyError
 
@@ -13,8 +14,8 @@ from models.objectid import PydanticObjectId
 
 from config import Config
 
-
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(Config)
 
 
