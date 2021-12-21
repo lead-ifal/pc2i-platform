@@ -15,7 +15,7 @@ Repositório de código da plataforma e API para gerenciamento de irrigação pr
 
 ```cd pc2i-platform```
 
-- Para satisfazer as dependências do projeto, execute o seguite comando:
+- Para satisfazer as dependências do projeto, execute o seguinte comando:
 
 ```pip3 install -r requirements.txt```
 
