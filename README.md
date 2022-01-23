@@ -24,7 +24,7 @@ Repositório de código da plataforma e API para gerenciamento de irrigação pr
 ```python3 -m flask run```
 
 ## Guia de Instalação (Windows)
-> Tenha certeza que está dentro da pasta do projeto Flask!
+> Tenha certeza que está dentro da pasta do projeto Flask clonado deste repositório.
 
 Passo a Passo:
 - `py -3 -m venv venv` (criar ambiente virtual)
