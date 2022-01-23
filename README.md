@@ -6,7 +6,7 @@ Repositório de código da plataforma e API para gerenciamento de irrigação pr
 - Flask
 - ...
 
-## Guia de Instalação
+## Guia de Instalação (Linux e MacOS)
 - Clone do repositório:
 
 ```git clone https://github.com/lead-ifal/pc2i-platform.git```
@@ -22,3 +22,12 @@ Repositório de código da plataforma e API para gerenciamento de irrigação pr
 - Execute a aplicação no ambiente Python:
   
 ```python3 -m flask run```
+
+## Guia de Instalação (Windows)
+> Tenha certeza que está dentro da pasta do projeto Flask!
+
+Passo a Passo:
+- `py -3 -m venv venv` (criar ambiente virtual)
+- `venv\Scripts\activate` (ativar ambiente - CMD como admin)
+- `pip install -r requirements.txt` (instalar dependências)
+- `python -m flask run` (executar app)
