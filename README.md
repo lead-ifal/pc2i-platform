@@ -15,6 +15,8 @@ Repositório de código da plataforma e API para gerenciamento de irrigação pr
 
 ```cd pc2i-platform```
 
+- Renomeie o arquivo ```.env-example``` para ```.env```e ajuste-o conforme as suas configurações locais.
+
 - Para satisfazer as dependências do projeto, execute o seguinte comando:
 
 ```pip3 install -r requirements.txt```
