@@ -1,5 +1,4 @@
 import bcrypt
-import json
 from flask import Blueprint
 
 users_routes = Blueprint('users', __name__)
