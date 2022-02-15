@@ -36,7 +36,7 @@ def create():
     users.insert_one(user.dict())
     message = 'Usuário criado com sucesso'
 
-    return GlobalController.generateResponse(200, message, userData)
+    return GlobalController.generateResponse(201, message, userData)
 
   errorMessage = 'Os parâmetros "name", "email" e "password" são obrigatórios'
   return GlobalController.generateResponse(400, errorMessage)
