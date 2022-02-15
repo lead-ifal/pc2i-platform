@@ -10,10 +10,9 @@ class GlobalController:
 
   def generateResponse(status, message, data=None):
     response = {}
-    response['status'] = status
     response['message'] = message
     
     if data is not None:
       response['data'] = data
     
-    return response
+    return response, status
