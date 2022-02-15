@@ -27,7 +27,7 @@ def create():
       zones.insert_one(zoneData)
 
       message = 'Zone de irrigação criada com sucesso'
-      return GlobalController.generateResponse(200, message, zoneData)
+      return GlobalController.generateResponse(201, message, zoneData)
     except:
       errorMessage = 'Não foi possível criar uma zona de irrigação com os dados informados'
       return GlobalController.generateResponse(400, errorMessage)
