@@ -7,6 +7,7 @@ from flask import request
 from app.models.user import User
 from app.controllers.user_controller import UserController
 from app.controllers.global_controller import GlobalController
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
 from datetime import datetime
 from typing import Collection
 from app import database
@@ -26,7 +27,7 @@ def create():
 
     if user['exists']:
       errorMessage = 'Já existe um usuário cadastrado com esse endereço de e-mail'
-      return GlobalController.generateResponse(400, errorMessage)
+      return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
 
     body['password'] = UserController.encodePassword(body['password'])
 
@@ -36,10 +37,10 @@ def create():
     users.insert_one(user.dict())
     message = 'Usuário criado com sucesso'
 
-    return GlobalController.generateResponse(200, message, userData)
+    return GlobalController.generateResponse(HTTP_CREATED_CODE, message, userData)
 
   errorMessage = 'Os parâmetros "name", "email" e "password" são obrigatórios'
-  return GlobalController.generateResponse(400, errorMessage)
+  return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
 
 @users_routes.route('/user/login', methods=['POST'])
 def signin():
@@ -64,13 +65,13 @@ def signin():
           'date_added': user['data']['date_added']
         }
 
-        return GlobalController.generateResponse(200, message, data)
+        return GlobalController.generateResponse(HTTP_SUCCESS_CODE, message, data)
         
       errorMessage = 'A senha está incorreta'
-      return GlobalController.generateResponse(400, errorMessage)
+      return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
 
     errorMessage = 'E-mail inválido'
-    return GlobalController.generateResponse(400, errorMessage)
+    return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
 
   errorMessage = 'Os parâmetros "email" e "password" são obrigatórios'
-  return GlobalController.generateResponse(400, errorMessage)
+  return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
