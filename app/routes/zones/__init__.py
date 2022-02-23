@@ -4,7 +4,6 @@ zones_routes = Blueprint('zones', __name__)
 
 from flask import request
 from app.controllers.global_controller import GlobalController
-from app.controllers.zone_controller import ZoneController
 from app.models.zone import Zone
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE
 from typing import Collection
@@ -21,9 +20,8 @@ def create():
 
   if includesParams:
     try:
-      body['_id'] = ZoneController.buildZoneId(zones)
       zone = Zone(**body)
-      zoneData = zone.dict(by_alias=True)
+      zoneData = zone.dict(exclude_none=True)
 
       zones.insert_one(zoneData)
 
