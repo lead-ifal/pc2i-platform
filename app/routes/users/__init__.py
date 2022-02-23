@@ -1,3 +1,4 @@
+import json
 import bcrypt
 from flask import Blueprint
 
@@ -32,7 +33,11 @@ def create():
     body['password'] = UserController.encodePassword(body['password'])
 
     user = User(**body)
-    userData = { 'date_added': user.date_added, 'email': user.email }
+    userData = {
+      'date_added': json.dumps(user.date_added, default=str),
+      'email': user.email,
+      'name': user.name
+    }
 
     users.insert_one(user.dict())
     message = 'Usuário criado com sucesso'
@@ -50,19 +55,21 @@ def signin():
   includesParams = GlobalController.includesAllRequiredParams(requiredParams, body)
 
   if includesParams:
-    user = UserController.userAlreadyExists(body['email'], users)
+    userData = UserController.userAlreadyExists(body['email'], users)
+    userExists = userData['exists']
 
-    if user['exists']:
+    if userExists:
+      user = User(**userData['data'])
       encodedPassword = body['password'].encode()
-      savedPassword = user['data']['password']
+      savedPassword = user.password
       passwordIsCorrect = bcrypt.checkpw(encodedPassword, savedPassword)
       
       if passwordIsCorrect:
         message = 'Autenticado com sucesso'
         data = {
-          'email': user['data']['email'],
-          'name': user['data']['name'],
-          'date_added': user['data']['date_added']
+          'email': user.email,
+          'name': user.name,
+          'date_added': json.dumps(user.date_added, default=str)
         }
 
         return GlobalController.generateResponse(HTTP_SUCCESS_CODE, message, data)
