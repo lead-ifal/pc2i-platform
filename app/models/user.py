@@ -5,4 +5,4 @@ class User(BaseModel):
   email: str
   name: str
   password: bytes
-  date_added: datetime
+  date_added: datetime = datetime.utcnow()
