@@ -8,7 +8,6 @@ from app.models.user import User
 from app.controllers.user_controller import UserController
 from app.controllers.global_controller import GlobalController
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
-from datetime import datetime
 from typing import Collection
 from app import database
 
@@ -18,7 +17,6 @@ users: Collection = database.users
 def create():
   requiredParams = ['name', 'email', 'password']
   body = request.get_json()
-  body['date_added'] = datetime.utcnow()
 
   includesParams = GlobalController.includesAllRequiredParams(requiredParams, body)
 
@@ -32,12 +30,15 @@ def create():
     body['password'] = UserController.encodePassword(body['password'])
 
     user = User(**body)
-    userData = { 'date_added': user.date_added, 'email': user.email }
 
     users.insert_one(user.dict())
     message = 'Usuário criado com sucesso'
 
-    return GlobalController.generateResponse(HTTP_CREATED_CODE, message, userData)
+    return GlobalController.generateResponse(
+      HTTP_CREATED_CODE,
+      message,
+      user.dict(exclude={'password'})
+    )
 
   errorMessage = 'Os parâmetros "name", "email" e "password" são obrigatórios'
   return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
@@ -50,22 +51,23 @@ def signin():
   includesParams = GlobalController.includesAllRequiredParams(requiredParams, body)
 
   if includesParams:
-    user = UserController.userAlreadyExists(body['email'], users)
+    userData = UserController.userAlreadyExists(body['email'], users)
+    userExists = userData['exists']
 
-    if user['exists']:
+    if userExists:
+      user = User(**userData['data'])
       encodedPassword = body['password'].encode()
-      savedPassword = user['data']['password']
+      savedPassword = user.password
       passwordIsCorrect = bcrypt.checkpw(encodedPassword, savedPassword)
       
       if passwordIsCorrect:
         message = 'Autenticado com sucesso'
-        data = {
-          'email': user['data']['email'],
-          'name': user['data']['name'],
-          'date_added': user['data']['date_added']
-        }
 
-        return GlobalController.generateResponse(HTTP_SUCCESS_CODE, message, data)
+        return GlobalController.generateResponse(
+          HTTP_SUCCESS_CODE,
+          message,
+          user.dict(exclude={'password'})
+        )
         
       errorMessage = 'A senha está incorreta'
       return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
