@@ -1,3 +1,6 @@
+from flask import Response
+from app.models.json_encoder import JSONEncoder
+
 class GlobalController:
   def includesAllRequiredParams(params, body):
     includesAllRequiredParams = True
@@ -15,4 +18,8 @@ class GlobalController:
     if data is not None:
       response['data'] = data
     
-    return response, status
+    return Response(
+      response = JSONEncoder().encode(response),
+      status = status,
+      mimetype = 'application/json'
+    )
