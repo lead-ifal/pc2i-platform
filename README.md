@@ -2,34 +2,56 @@
 Repositório de código da plataforma e API para gerenciamento de irrigação promovido pelo projeto PC2I.
 
 ## Pré-Requisitos
-- Python 3
-- Flask
-- ...
+> Antes de começar, verifique se as seguintes ferramentas estão instaladas em sua máquina
+- [Git](https://git-scm.com/downloads)
+- [Python 3](https://python.org/downloads)
 
-## Guia de Instalação (Linux e MacOS)
-- Clone do repositório:
+## Guia de Instalação
+> Com as ferramentas devidamente instaladas, execute os seguintes comandos no terminal (bash, powershell, cmd...)
 
-```git clone https://github.com/lead-ifal/pc2i-platform.git```
+### 1. Clonar repositório
+```
+git clone https://github.com/lead-ifal/pc2i-platform.git
+```
 
-- Acesse o diretório clonado:
+### 2. Entrar na pasta do projeto
+```
+cd pc2i-platform
+```
 
-```cd pc2i-platform```
+### 3. Criar ambiente virtual do Flask
+- Linux/MacOS:
+```
+python -m venv venv
+```
 
-- Renomeie o arquivo ```.env-example``` para ```.env```e ajuste-o conforme as suas configurações locais.
+- Windows:
+```
+py -3 -m venv venv
+```
 
-- Para satisfazer as dependências do projeto, execute o seguinte comando:
+### 4. Ativar ambiente virtual
+- Linux/MacOS:
+```
+. venv/bin/activate
+```
 
-```pip3 install -r requirements.txt```
+- Windows:
+```
+venv\Scripts\activate
+```
 
-- Execute a aplicação no ambiente Python:
-  
-```python3 -m flask run```
+### 5. Instalar dependências
+- Linux/MacOS e Windows:
+```
+pip install -r requirements.txt
+```
 
-## Guia de Instalação (Windows)
-> Tenha certeza que está dentro da pasta do projeto Flask clonado deste repositório.
+### 6. Criar arquivo de variáveis de ambiente
+Você pode usar o arquivo [`.env-example`](./.env-example) como base, definindo a localização (URL) do _cluster_ do _MongoDB_.
 
-Passo a Passo:
-- `py -3 -m venv venv` (criar ambiente virtual)
-- `venv\Scripts\activate` (ativar ambiente - CMD como admin)
-- `pip install -r requirements.txt` (instalar dependências)
-- `python -m flask run` (executar app)
+### 7. Executar aplicação
+- Linux/MacOS e Windows:
+```
+python __init__.py
+```
