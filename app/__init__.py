@@ -15,3 +15,6 @@ app.register_blueprint(users_blueprint)
 
 from .routes.zones import zones_routes as zones_blueprint
 app.register_blueprint(zones_blueprint)
+
+from .routes.cultures import cultures_routes as cultures_blueprint
+app.register_blueprint(cultures_blueprint)
