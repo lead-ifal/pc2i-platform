@@ -6,6 +6,7 @@ from flask import request
 from app.controllers.global_controller import GlobalController
 from app.models.zone import Zone
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE
+from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from typing import Collection
 from app import database
 
@@ -18,18 +19,16 @@ def create():
 
   includesParams = GlobalController.includesAllRequiredParams(requiredParams, body)
 
-  if includesParams:
-    try:
+  try:
+    if includesParams:
       zone = Zone(**body)
       zoneData = zone.dict(exclude_none=True)
 
       zones.insert_one(zoneData)
 
-      message = 'Zone de irrigação criada com sucesso'
-      return GlobalController.generateResponse(HTTP_CREATED_CODE, message, zoneData)
-    except:
-      errorMessage = 'Não foi possível criar uma zona de irrigação com os dados informados'
-      return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
-  
-  errorMessage = 'Os parâmetros "name", "description" e "size" são obrigatórios'
-  return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, errorMessage)
+      return GlobalController.generateResponse(HTTP_CREATED_CODE, SUCCESS_MESSAGE, zoneData)
+
+    raise Exception()
+
+  except:
+    return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
