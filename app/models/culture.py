@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from werkzeug.datastructures import FileStorage
 from typing import Optional
 from datetime import datetime
 from app.models.objectid import PydanticObjectId
@@ -13,4 +14,7 @@ class Culture(BaseModel):
   ratio: float
   phase: str
   geographic_coordinates: dict
-  image: Optional[bytes]
+  image: FileStorage
+
+  class Config:
+    arbitrary_types_allowed = True
