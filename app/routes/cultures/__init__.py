@@ -10,20 +10,20 @@ from app.models.culture import Culture
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from typing import Collection
-from app import database
+from app import database, pymongo_client
 
 cultures: Collection = database.cultures
 zones: Collection = database.zones
 
 @cultures_routes.route('/culture/new', methods = ['POST'])
 def create():
-  requiredParams = ["zone_id", "name", "type", "planting_date", "harvest_date", "ratio", "phase", "geographic_coordinates"]
-  body = request.get_json()
+  required_params = ["zone_id", "name", "type", "planting_date", "harvest_date", "ratio", "phase", "geographic_coordinates", "image"]
+  body = { **request.form.to_dict(), **request.files.to_dict() }
 
-  includesParams = GlobalController.includesAllRequiredParams(requiredParams, body)
+  includes_params = GlobalController.includesAllRequiredParams(required_params, body)
 
   try:
-    if includesParams:
+    if includes_params:
       body['planting_date'] = datetime.fromisoformat(body['planting_date'])
       body['harvest_date'] = datetime.fromisoformat(body['harvest_date'])
       body['geographic_coordinates'] = {
@@ -33,14 +33,19 @@ def create():
 
       culture = Culture(**body)
       zone_id = ObjectId(culture.zone_id)
-      cultureData = culture.dict(exclude_none=True)
-      zonesWithGivenId = zones.count({ '_id': zone_id })
-      zoneExists = zonesWithGivenId == 1
+      culture_data = culture.dict(exclude_none=True)
+      zones_with_given_id = zones.count({ '_id': zone_id })
+      zone_exists = zones_with_given_id == 1
 
-      if zoneExists:
-        cultures.insert_one(cultureData)
+      if zone_exists:
+        now = datetime.now().strftime('%Y%m%d%H%M%S')
+        image_filename = '{}-{}'.format(now, body['image'].filename)
+        culture_data['image'] = image_filename
 
-        return GlobalController.generateResponse(HTTP_CREATED_CODE, SUCCESS_MESSAGE, cultureData)
+        pymongo_client.save_file(image_filename, body['image'])
+        cultures.insert_one(culture_data)
+
+        return GlobalController.generateResponse(HTTP_CREATED_CODE, SUCCESS_MESSAGE, culture_data)
 
     raise Exception()
 
