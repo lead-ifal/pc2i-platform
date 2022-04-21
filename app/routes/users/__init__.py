@@ -9,6 +9,7 @@ from app.controllers.user_controller import UserController
 from app.controllers.global_controller import GlobalController
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
+from app.constants.required_params import required_params
 from typing import Collection
 from app import database
 
@@ -16,9 +17,9 @@ users: Collection = database.users
 
 @users_routes.route('/user/new', methods = ['POST'])
 def create():
-  required_params = ['name', 'email', 'password']
   body = request.get_json()
-  includes_params = GlobalController.includes_all_required_params(required_params, body)
+  params = required_params['user']['create']
+  includes_params = GlobalController.includes_all_required_params(params, body)
 
   try:
     if includes_params:
@@ -44,9 +45,9 @@ def create():
 
 @users_routes.route('/user/login', methods=['POST'])
 def read():
-  required_params = ['email', 'password']
   body = request.get_json()
-  includes_params = GlobalController.includes_all_required_params(required_params, body)
+  params = required_params['user']['read']
+  includes_params = GlobalController.includes_all_required_params(params, body)
 
   try:
     if includes_params:

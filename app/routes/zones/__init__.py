@@ -7,6 +7,7 @@ from app.controllers.global_controller import GlobalController
 from app.models.zone import Zone
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
+from app.constants.required_params import required_params
 from typing import Collection
 from app import database
 
@@ -14,10 +15,9 @@ zones: Collection = database.zones
 
 @zones_routes.route('/zone/new', methods = ['POST'])
 def create():
-  required_params = ['name', 'description', 'size']
   body = request.get_json()
-
-  includes_params = GlobalController.includes_all_required_params(required_params, body)
+  params = required_params['zone']['create']
+  includes_params = GlobalController.includes_all_required_params(params, body)
 
   try:
     if includes_params:
