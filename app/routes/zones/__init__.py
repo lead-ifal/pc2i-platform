@@ -14,21 +14,21 @@ zones: Collection = database.zones
 
 @zones_routes.route('/zone/new', methods = ['POST'])
 def create():
-  requiredParams = ['name', 'description', 'size']
+  required_params = ['name', 'description', 'size']
   body = request.get_json()
 
-  includesParams = GlobalController.includesAllRequiredParams(requiredParams, body)
+  includes_params = GlobalController.includes_all_required_params(required_params, body)
 
   try:
-    if includesParams:
+    if includes_params:
       zone = Zone(**body)
-      zoneData = zone.dict(exclude_none=True)
+      zone_data = zone.dict(exclude_none=True)
 
-      zones.insert_one(zoneData)
+      zones.insert_one(zone_data)
 
-      return GlobalController.generateResponse(HTTP_CREATED_CODE, SUCCESS_MESSAGE, zoneData)
+      return GlobalController.generate_response(HTTP_CREATED_CODE, SUCCESS_MESSAGE, zone_data)
 
     raise Exception()
 
   except:
-    return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
+    return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)

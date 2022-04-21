@@ -2,18 +2,18 @@ from typing import Collection
 import bcrypt
 
 class UserController:
-  def encodePassword(password: str):
+  def encode_password(password: str):
     salt = bcrypt.gensalt()
-    encodedPassword = password.encode('utf8')
+    encoded_password = password.encode('utf8')
 
-    return bcrypt.hashpw(encodedPassword, salt)
+    return bcrypt.hashpw(encoded_password, salt)
   
-  def userAlreadyExists(email: str, usersDatabase: Collection):
-    userAlreadyExists = True
+  def user_already_exists(email: str, users_database: Collection):
+    user_already_exists = True
 
-    savedUser = usersDatabase.find_one({ 'email': email })
+    saved_user = users_database.find_one({ 'email': email })
 
-    if savedUser is None:
-      userAlreadyExists = False
+    if saved_user is None:
+      user_already_exists = False
 
-    return { 'exists': userAlreadyExists, 'data': savedUser }
+    return { 'exists': user_already_exists, 'data': saved_user }
