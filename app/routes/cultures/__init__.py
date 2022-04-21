@@ -9,6 +9,7 @@ from app.controllers.global_controller import GlobalController
 from app.models.culture import Culture
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
+from app.constants.required_params import required_params
 from typing import Collection
 from app import database, pymongo_client
 
@@ -17,10 +18,9 @@ zones: Collection = database.zones
 
 @cultures_routes.route('/culture/new', methods = ['POST'])
 def create():
-  required_params = ["zone_id", "name", "type", "planting_date", "harvest_date", "ratio", "phase", "geographic_coordinates", "image"]
   body = { **request.form.to_dict(), **request.files.to_dict() }
-
-  includes_params = GlobalController.includes_all_required_params(required_params, body)
+  params = required_params['culture']['create']
+  includes_params = GlobalController.includes_all_required_params(params, body)
 
   try:
     if includes_params:
