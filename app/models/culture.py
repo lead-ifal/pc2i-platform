@@ -11,7 +11,7 @@ class Culture(BaseModel):
   type: str
   planting_date: datetime
   harvest_date: datetime
-  ratio: float
+  coefficient_et: float
   phase: str
   geographic_coordinates: dict
   image: FileStorage
