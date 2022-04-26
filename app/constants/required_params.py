@@ -7,6 +7,6 @@ required_params = {
     'create': ['name', 'description', 'size']
   },
   'culture': {
-    'create': ['zone_id', 'name', 'type', 'planting_date', 'ratio', 'phase', 'geographic_coordinates']
+    'create': ['zone_id', 'name', 'type', 'planting_date', 'coefficient_et', 'phase', 'geographic_coordinates']
   }
 }
