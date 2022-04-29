@@ -10,11 +10,11 @@ class Culture(BaseModel):
   name: str
   type: str
   planting_date: datetime
-  harvest_date: datetime
+  harvest_date: Optional[datetime]
   coefficient_et: float
   phase: str
   geographic_coordinates: dict
-  image: FileStorage
+  image: Optional[FileStorage]
 
   class Config:
     arbitrary_types_allowed = True
