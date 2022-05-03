@@ -2,7 +2,7 @@ from flask import request
 from typing import Collection
 from app.controllers.global_controller import GlobalController
 from app.models.zone import Zone
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 from app import database
@@ -28,3 +28,12 @@ class ZoneController:
 
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
+
+  def list(user_id):
+    zone_list = zones.find({ 'user_id': user_id })
+    data = []
+
+    for zone in zone_list:
+      data.append(zone)
+
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
