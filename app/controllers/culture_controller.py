@@ -10,7 +10,7 @@ from typing import Collection
 from app import database, pymongo_client
 
 cultures: Collection = database.cultures
-zones: Collection = database.zones
+irrigation_zones: Collection = database.irrigation_zones
 
 class CultureController:
   def create():
@@ -30,11 +30,11 @@ class CultureController:
           body['harvest_date'] = datetime.fromisoformat(body['harvest_date'])
 
         culture = Culture(**body)
-        zone_id = ObjectId(culture.zone_id)
+        irrigation_zone_id = ObjectId(culture.irrigation_zone_id)
         culture_data = culture.dict(exclude_none=True)
-        zone_exists = zones.count({ '_id': zone_id }) == 1
+        irrigation_zone_exists = irrigation_zones.count({ '_id': irrigation_zone_id }) == 1
 
-        if zone_exists:
+        if irrigation_zone_exists:
           now = datetime.now().strftime('%Y%m%d%H%M%S')
           image_filename = '{}-{}'.format(now, body['image'].filename)
           culture_data['image'] = image_filename
