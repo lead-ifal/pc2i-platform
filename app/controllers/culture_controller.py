@@ -35,11 +35,13 @@ class CultureController:
         irrigation_zone_exists = irrigation_zones.count({ '_id': irrigation_zone_id }) == 1
 
         if irrigation_zone_exists:
-          now = datetime.now().strftime('%Y%m%d%H%M%S')
-          image_filename = '{}-{}'.format(now, body['image'].filename)
-          culture_data['image'] = image_filename
+          if 'image' in body:
+            now = datetime.now().strftime('%Y%m%d%H%M%S')
+            image_filename = '{}-{}'.format(now, body['image'].filename)
+            culture_data['image'] = image_filename
 
-          pymongo_client.save_file(image_filename, body['image'])
+            pymongo_client.save_file(image_filename, body['image'])
+
           cultures.insert_one(culture_data)
 
           return GlobalController.generate_response(HTTP_CREATED_CODE, SUCCESS_MESSAGE, culture_data)
