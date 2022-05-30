@@ -29,7 +29,7 @@ class UserController:
 
   def create():
     body = request.get_json()
-    params = required_params['user']['create']
+    params = required_params['users']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
 
     try:
@@ -56,7 +56,7 @@ class UserController:
 
   def login():
     body = request.get_json()
-    params = required_params['user']['read']
+    params = required_params['users']['read']
     includes_params = GlobalController.includes_all_required_params(params, body)
 
     try:

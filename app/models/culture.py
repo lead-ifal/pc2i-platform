@@ -6,7 +6,7 @@ from app.models.objectid import PydanticObjectId
 
 class Culture(BaseModel):
   id: Optional[PydanticObjectId] = Field(alias="_id")
-  zone_id: str
+  irrigation_zone_id: str
   name: str
   type: str
   planting_date: datetime
