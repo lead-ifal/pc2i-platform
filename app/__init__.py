@@ -14,6 +14,6 @@ from .routes.users import users_bp
 from .routes.irrigation_zones import irrigation_zones_bp
 from .routes.cultures import cultures_bp
 
-app.register_blueprint(users_bp, url_prefix='/user')
-app.register_blueprint(irrigation_zones_bp, url_prefix='/irrigation-zone')
-app.register_blueprint(cultures_bp, url_prefix='/culture')
+app.register_blueprint(users_bp, url_prefix='/users')
+app.register_blueprint(irrigation_zones_bp, url_prefix='/irrigation-zones')
+app.register_blueprint(cultures_bp, url_prefix='/cultures')

@@ -12,7 +12,7 @@ irrigation_zones: Collection = database.irrigation_zones
 class ZoneController:
   def create():
     body = request.get_json()
-    params = required_params['irrigation_zone']['create']
+    params = required_params['irrigation_zones']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
 
     try:
