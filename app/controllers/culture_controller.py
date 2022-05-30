@@ -15,7 +15,7 @@ irrigation_zones: Collection = database.irrigation_zones
 class CultureController:
   def create():
     body = { **request.form.to_dict(), **request.files.to_dict() }
-    params = required_params['culture']['create']
+    params = required_params['cultures']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
 
     try:
