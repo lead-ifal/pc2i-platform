@@ -1,7 +1,10 @@
-from pydantic import BaseModel
 from datetime import datetime
+from pydantic import BaseModel, Field
+from typing import Optional
+from app.models.objectid import PydanticObjectId
 
 class User(BaseModel):
+  id: Optional[PydanticObjectId] = Field(alias="_id")
   email: str
   name: str
   password: bytes
