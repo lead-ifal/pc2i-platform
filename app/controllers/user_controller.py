@@ -34,19 +34,21 @@ class UserController:
 
     try:
       if includes_params:
+        body['password'] = UserController.encode_password(body['password'])
         user_exists = UserController.user_already_exists(body['email'])['exists']
 
         if user_exists:
           raise Exception()
 
-        body['password'] = UserController.encode_password(body['password'])
         user = User(**body)
-        users.insert_one(user.dict())
+        result = users.insert_one(user.dict(exclude_none=True))
+        user_data = user.dict(exclude_none=True, exclude={'password'})
+        user_data['_id'] = result.inserted_id
 
         return GlobalController.generate_response(
           HTTP_CREATED_CODE,
           SUCCESS_MESSAGE,
-          user.dict(exclude={'password'})
+          user_data
         )
 
       raise Exception()
@@ -72,7 +74,7 @@ class UserController:
             return GlobalController.generate_response(
               HTTP_SUCCESS_CODE,
               SUCCESS_MESSAGE,
-              user.dict(exclude={'password'})
+              user.dict(exclude={'password'}, by_alias=True)
             )
 
       raise Exception()
