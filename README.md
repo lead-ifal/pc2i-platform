@@ -1,7 +1,9 @@
 # PC2I - Platform
 Repositório de código da plataforma e API para gerenciamento de irrigação promovido pelo projeto PC2I.
 
-## :open_file_folder: Conteúdo:
+Siga os passos do arquivo [CONTRIBUTING.md](./CONTRIBUTING.md), caso queira contribuir com novas funcionalidades, melhorias e/ou correções no projeto.
+
+## 📂 Conteúdo:
 - [Pré-requisitos](#⚠️-pré-requisitos)
 - [Rotas da API](#🔀-rotas-da-api)
 - [Guia de Instalação](#🧭-guia-de-instalação)
