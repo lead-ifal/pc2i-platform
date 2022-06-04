@@ -1,7 +1,7 @@
 # Como contribuir com o projeto
 > Siga os passos abaixo para contribuir com código ou sugestões de melhorias/correções na plataforma do projeto PC2I
 
-## 📂 Conteúdo:
+## :open_file_folder: Conteúdo:
 - [Pré-Requisitos](#1-pré-requisitos)
 - [Instalação](#2-siga-os-passos-do-guia-de-instalação)
 - [Sincronização](#3-antes-de-tudo-sincronize-com-o-repositório-remoto)
@@ -10,7 +10,7 @@
 - [Registrar as alterações](#6-registre-as-alterações-realizadas)
 - [Submeter contribuição](#7-enviar-as-modificações-para-análise)
 - [Solicitar avaliação](#8-abra-um-pull-request-pr-para-os-mais-íntimos)
-- 📝 [Sugerir melhorias ou correções](#📝-sugerir-melhorias-ou-correções)
+- :pencil: [Sugerir melhorias ou correções](#pencil-sugerir-melhorias-ou-correções)
 
 ---
 
@@ -76,7 +76,7 @@ Após a criação do PR, espere alguém analisar o seu código e indicar o que d
 
 Caso seja exigida alguma alteração, você pode realizar as correções, seguindo do [passo 5](#5-realize-as-alterações-necessárias) deste guia em diante.
 
-## 📝 Sugerir melhorias ou correções
+## :pencil: Sugerir melhorias ou correções
 Caso você ainda não sinta segurança em contribuir com código ou encontrou um problema/situação de melhoria e quer reportar, crie uma _issue_.
 
 Utilize [este guia](https://docs.github.com/pt/issues/tracking-your-work-with-issues/creating-an-issue) para reportar um problema ou indicar uma melhoria através de _issues_.
