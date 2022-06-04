@@ -3,20 +3,20 @@ Repositório de código da plataforma e API para gerenciamento de irrigação pr
 
 Siga os passos do arquivo [CONTRIBUTING.md](./CONTRIBUTING.md), caso queira contribuir com novas funcionalidades, melhorias e/ou correções no projeto.
 
-## 📂 Conteúdo:
-- [Pré-requisitos](#⚠️-pré-requisitos)
-- [Rotas da API](#🔀-rotas-da-api)
-- [Guia de Instalação](#🧭-guia-de-instalação)
+## :open_file_folder: Conteúdo:
+- [Pré-requisitos](#warning-pré-requisitos)
+- [Rotas da API](#twisted_rightwards_arrows-rotas-da-api)
+- [Guia de Instalação](#compass-guia-de-instalação)
 
-## ⚠️ Pré-Requisitos
+## :warning: Pré-Requisitos
 > Antes de começar, verifique se as seguintes ferramentas estão instaladas em sua máquina
 - [Git](https://git-scm.com/downloads)
 - [Python](https://python.org/downloads)
 
-## 🔀 Rotas da API
+## :twisted_rightwards_arrows: Rotas da API
 Todas as rotas da API estão documentadas no arquivo [ROUTES.md](./ROUTES.md).
 
-## 🧭 Guia de Instalação
+## :compass: Guia de Instalação
 > Com as ferramentas devidamente instaladas, execute os seguintes comandos no terminal (bash, powershell, cmd...)
 
 ### **1. Clonar repositório**
