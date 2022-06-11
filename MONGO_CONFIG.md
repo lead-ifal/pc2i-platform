@@ -21,8 +21,11 @@
 ![imagem](https://user-images.githubusercontent.com/63798776/171949064-4b8f1a82-0b3c-4eb7-92e8-2f8d7964542a.png)
 
 ```env
-# Exemplo:
-mongodb+srv://<username>:<password>@cluster0.as4asd4.mongodb.net/?retryWrites=true&w=majority
+# Estrutura final da URL:
+mongodb+srv://<username>:<password>@<cluster>.<hash>.mongodb.net/<database>?retryWrites=true&w=majority
+
+# OBS.: "<username>", "<cluster>" e "<hash>" serão gerados pelo próprio MongoDB.
+# Adicione o nome do banco de dados no lugar de "<database>".
 ```
 
 8. Você vai trocar _username_ e _password_ pelos dados que foram informados no ponto **4** desse guia.
