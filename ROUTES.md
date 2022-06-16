@@ -171,7 +171,6 @@
   "type": "string",
   "planting_date": "date",
   "harvest_date": "date", // opcional
-  "coefficient_et": "number",
   "phase": "string",
   "geographic_coordinates": "array[2]",
   "image": "file" // opcional
@@ -191,10 +190,9 @@
     "type": "string",
     "planting_date": "string",
     "harvest_date": "string", // opcional
-    "coefficient_et": "number",
     "phase": "string",
     "geographic_coordinates": "array[2]",
-    "image": "string" // opcional (nome do arquivo)
+    "image": "string" // opcional
   }
 }
 ```
