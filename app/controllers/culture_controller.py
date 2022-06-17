@@ -3,7 +3,7 @@ from bson import ObjectId
 from datetime import datetime
 from app.controllers.global_controller import GlobalController
 from app.models.culture import Culture
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 from typing import Collection
@@ -50,12 +50,3 @@ class CultureController:
 
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
-
-  def list(irrigation_zone_id):
-    culture_list = cultures.find({ 'irrigation_zone_id': irrigation_zone_id })
-    data = []
-
-    for culture in  culture_list:
-      data.append(culture)
-
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
