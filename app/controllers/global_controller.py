@@ -1,6 +1,6 @@
 from flask import Response
 from app.models.json_encoder import JSONEncoder
-#a
+
 class GlobalController:
   def includes_all_required_params(params, body):
     includes_params = True
