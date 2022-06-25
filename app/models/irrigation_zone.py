@@ -8,4 +8,4 @@ class IrrigationZone(BaseModel):
   name: str
   description: str
   size: float
-  irrigation_type: str
+  irrigation_type: int
