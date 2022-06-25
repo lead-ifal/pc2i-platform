@@ -97,7 +97,7 @@
   "name": "string",
   "description": "string",
   "size": "number",
-  "irrigation_type": "string"
+  "irrigation_type": "number"
 }
 ```
 
@@ -113,7 +113,7 @@
     "name": "string",
     "description": "string",
     "size": "number",
-    "irrigation_type": "string"
+    "irrigation_type": "number"
   }
 }
 ```
@@ -144,7 +144,7 @@
       "name": "string",
       "description": "string",
       "size": "number",
-      "irrigation_type": "string"
+      "irrigation_type": "number"
     },
     {
       /* ... */
