@@ -96,7 +96,8 @@
   "user_id": "string",
   "name": "string",
   "description": "string",
-  "size": "number"
+  "size": "number",
+  "irrigation_type": "number"
 }
 ```
 
@@ -111,7 +112,8 @@
     "user_id": "string",
     "name": "string",
     "description": "string",
-    "size": "number"
+    "size": "number",
+    "irrigation_type": "number"
   }
 }
 ```
@@ -141,7 +143,8 @@
       "user_id": "string",
       "name": "string",
       "description": "string",
-      "size": "number"
+      "size": "number",
+      "irrigation_type": "number"
     },
     {
       /* ... */
@@ -194,6 +197,47 @@
     "geographic_coordinates": "array[2]",
     "image": "string" // opcional
   }
+}
+```
+
+```jsonc
+// 400 BAD REQUEST
+
+{
+  "message": "Não foi possível realizar a operação com os dados informados"
+}
+```
+
+---
+
+## `GET` /cultures/irrigation-zone/{irrigation_zone_id}
+> Listagem de culturas salvas em uma determinada zona de irrigação
+
+### Exemplos de Resposta
+```jsonc
+// 200 OK (SUCCESS)
+
+{
+  "message": "Operação realizada com sucesso",
+  "data": [
+    {
+      "_id": "string",
+      "irrigation_zone_id": "string",
+      "name": "string",
+      "type": "string",
+      "planting_date": "string",
+      "harvest_date": "string", // opcional
+      "phase": "string",
+      "geographic_coordinates": {
+        "type": "Point",
+        "coordinates": "array[2]"
+      },
+      "image": "string" // opcional
+    },
+    {
+      /* ... */
+    }
+  ]
 }
 ```
 

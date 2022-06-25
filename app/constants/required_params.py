@@ -4,9 +4,9 @@ required_params = {
     'read': ['email', 'password']
   },
   'irrigation_zones': {
-    'create': ['name', 'description', 'size', 'user_id']
+    'create': ['name', 'description', 'size', 'irrigation_type', 'user_id']
   },
   'cultures': {
-    'create': ['irrigation_zone_id', 'name', 'type', 'planting_date', 'coefficient_et', 'phase', 'geographic_coordinates']
+    'create': ['irrigation_zone_id', 'name', 'type', 'planting_date', 'phase', 'geographic_coordinates']
   }
 }
