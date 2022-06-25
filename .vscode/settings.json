@@ -1,0 +1,7 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": true,
+  "workbench.tree.indent": 15,
+  "python.linting.enabled": false
+}
