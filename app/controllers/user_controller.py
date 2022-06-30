@@ -28,9 +28,12 @@ class UserController:
     return { 'exists': user_already_exists, 'data': saved_user }
 
   def create():
+
     body = request.get_json()
     params = required_params['users']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
+
+
 
     try:
       if includes_params:
@@ -51,9 +54,13 @@ class UserController:
           user_data
         )
 
+
+
+
       raise Exception()
 
     except:
+
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
   def login():
@@ -80,4 +87,5 @@ class UserController:
       raise Exception()
 
     except:
+
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)

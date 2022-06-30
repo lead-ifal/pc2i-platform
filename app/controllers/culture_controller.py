@@ -58,4 +58,10 @@ class CultureController:
     for culture in  culture_list:
       data.append(culture)
 
+
+
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+
+  def list_specific(culture_id):
+    data =  cultures.find_one({ '_id': ObjectId(culture_id)})
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
