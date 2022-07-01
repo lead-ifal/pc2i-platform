@@ -62,6 +62,6 @@ class CultureController:
 
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
-  def list_specific(culture_id):
+  def show(culture_id):
     data =  cultures.find_one({ '_id': ObjectId(culture_id)})
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
