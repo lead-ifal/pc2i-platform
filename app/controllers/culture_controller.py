@@ -59,3 +59,7 @@ class CultureController:
       data.append(culture)
 
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+
+  def show(culture_id):
+    data =  cultures.find_one({ '_id': ObjectId(culture_id)})
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
