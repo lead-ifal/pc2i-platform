@@ -10,6 +10,7 @@ CORS(app)
 pymongo_client = PyMongo(app)
 database = pymongo_client.db
 
+from app.mqtt import mqtt
 from .routes.users import users_bp
 from .routes.irrigation_zones import irrigation_zones_bp
 from .routes.cultures import cultures_bp
