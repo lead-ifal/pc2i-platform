@@ -4,3 +4,5 @@
 .env
 *__pycache__
 .DS_Store
+config.pyc
+app/__init__.pyc
