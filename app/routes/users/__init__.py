@@ -14,7 +14,7 @@ from app import database
 
 users: Collection = database.users
 
-@users_routes.route('/user/new', methods = ['POST'])
+@users_routes.route('/users/', methods = ['POST'])
 def create():
   requiredParams = ['name', 'email', 'password']
   body = request.get_json()
@@ -42,7 +42,7 @@ def create():
   except:
     return GlobalController.generateResponse(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-@users_routes.route('/user/login', methods=['POST'])
+@users_routes.route('/users/login', methods=['POST'])
 def signin():
   requiredParams = ['email', 'password']
   body = request.get_json()
