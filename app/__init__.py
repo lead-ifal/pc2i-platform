@@ -10,11 +10,11 @@ CORS(app)
 pymongo_client = PyMongo(app)
 database = pymongo_client.db
 
-from .routes.users import users_routes as users_blueprint
-app.register_blueprint(users_blueprint)
+from app.mqtt import mqtt
+from .routes.users import users_bp
+from .routes.irrigation_zones import irrigation_zones_bp
+from .routes.cultures import cultures_bp
 
-from .routes.zones import zones_routes as zones_blueprint
-app.register_blueprint(zones_blueprint)
-
-from .routes.cultures import cultures_routes as cultures_blueprint
-app.register_blueprint(cultures_blueprint)
+app.register_blueprint(users_bp, url_prefix='/users')
+app.register_blueprint(irrigation_zones_bp, url_prefix='/irrigation-zones')
+app.register_blueprint(cultures_bp, url_prefix='/cultures')
