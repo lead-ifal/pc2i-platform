@@ -69,3 +69,9 @@ python __init__.py
 ```
 
 A aplicação será executada em `http://localhost:5000`.
+
+### **8. Realizando solicitação à API**
+Utilizando uma ferramenta como Postman ou Thunder Client, realize uma solicitação de teste à API. No exemplo abaixo, requisitamos que a API nos retorne a lista de zonas de irrigação cadastradas na banco:
+```bash
+GET http://localhost:5000/irrigation-zones
+```
