@@ -2,22 +2,22 @@ from flask import Response
 from app.models.json_encoder import JSONEncoder
 
 class GlobalController:
-  def includesAllRequiredParams(params, body):
-    includesAllRequiredParams = True
+  def includes_all_required_params(params, body):
+    includes_params = True
 
     for param in params:
       if (param not in body):
-        includesAllRequiredParams = False
-    
-    return includesAllRequiredParams
+        includes_params = False
 
-  def generateResponse(status, message, data=None):
+    return includes_params
+
+  def generate_response(status, message, data=None):
     response = {}
     response['message'] = message
-    
+
     if data is not None:
       response['data'] = data
-    
+
     return Response(
       response = JSONEncoder().encode(response),
       status = status,
