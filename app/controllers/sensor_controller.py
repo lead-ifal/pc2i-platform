@@ -8,12 +8,14 @@ from app.controllers.global_controller import GlobalController
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
+from app.models.sensor_reading import SensorReading
 
 sensors: Collection = database.db.sensors
+sensors_readings: Collection = database.db.sensors_readings
 
 class SensorController():
 
-  def create(self):
+  def create():
     body = request.get_json()
     params = required_params['sensors']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
@@ -22,7 +24,7 @@ class SensorController():
       if includes_params:
 
         sensor = Sensor(**body)
-        result = self.sensors.insert_one(sensor.dict(exclude_none=True))
+        result = sensors.insert_one(sensor.dict(exclude_none=True))
         sensor_data = sensor.dict(exclude_none=True)
         sensor_data['_id'] = result.inserted_id
 
@@ -53,18 +55,18 @@ class SensorController():
     print(data)
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
-  def create_reading(data):
-    body = data
-    sensor = Sensor(**body)
-    result = sensors.insert_one(sensor.dict(exclude_none=True))
-    sensor_data = sensor.dict(exclude_none=True)
-    sensor_data['_id'] = result.inserted_id
+  def create_reading():
+    body = request.get_json()
+    sensor_reading = SensorReading(**body)
+    result = sensors_readings.insert_one(sensor_reading.dict(exclude_none=True))
+    sensor_reading_data = sensor_reading.dict(exclude_none=True)
+    sensor_reading_data['_id'] = result.inserted_id
 
-    if(sensor_data['_id']):
+    if(sensor_reading_data['_id']):
       return GlobalController.generate_response(
         HTTP_CREATED_CODE,
         SUCCESS_MESSAGE,
-        sensor_data
+        sensor_reading_data
       )
 
     raise Exception()
