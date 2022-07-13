@@ -7,5 +7,5 @@ class Config:
   DEBUG = True
   MONGO_URI = os.getenv('MONGO_URI')
   MQTT_BROKER_URL = os.getenv('BROKER_URL')
-  MQTT_BROKER_PORT = 1883
+  MQTT_BROKER_PORT = 80
   

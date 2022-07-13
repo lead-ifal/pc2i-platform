@@ -19,17 +19,17 @@ class UserController():
 
     return bcrypt.hashpw(encoded_password, salt)
   
-  def user_already_exists(self, email: str):
+  def user_already_exists(email: str):
     user_already_exists = True
 
-    saved_user = self.users.find_one({ 'email': email })
+    saved_user = users.find_one({ 'email': email })
 
     if saved_user is None:
       user_already_exists = False
 
     return { 'exists': user_already_exists, 'data': saved_user }
 
-  def create(self):
+  def create():
     body = request.get_json()
     params = required_params['users']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
@@ -43,7 +43,7 @@ class UserController():
           raise Exception()
 
         user = User(**body)
-        result = self.users.insert_one(user.dict(exclude_none=True))
+        result = users.insert_one(user.dict(exclude_none=True))
         user_data = user.dict(exclude_none=True, exclude={'password'})
         user_data['_id'] = result.inserted_id
 
