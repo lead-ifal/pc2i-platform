@@ -63,4 +63,4 @@ class ZoneController:
     irrigation_status = not irrigation_status
     print(irrigation_status)
     print(Config.PC2I_ESP_IP)
-    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+irrigation_status).content
+    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+str(irrigation_status)).content
