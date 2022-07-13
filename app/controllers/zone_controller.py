@@ -8,6 +8,7 @@ from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 
 irrigation_zones: Collection = database.db.irrigation_zones
+mqtt: mqtt
 
 class ZoneController:
   def create():
@@ -56,6 +57,7 @@ class ZoneController:
 
   def publish_humidity(zone_id, value):
     topic = 'pc2i/irrigation-zones/'+zone_id+'/humidity'
+    mqtt.subscribe(topic)
     publish_result = mqtt.publish(topic, value)
     print("teste")
     print(publish_result)
