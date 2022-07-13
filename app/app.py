@@ -1,6 +1,7 @@
 """The app module, containing the app factory function."""
 import logging
 import sys
+from app.controllers.sensor_controller import SensorController
 from app.extensions import (
     cors,
     database,
@@ -53,6 +54,8 @@ def handle_mqtt_message(client, userdata, message):
     payload=message.payload.decode()
   )
   print(data)
+  SensorController.publish(data)
+  
 
 @mqtt.on_log()
 def handle_logging(client, userdata, level, buf):
