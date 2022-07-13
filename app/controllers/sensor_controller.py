@@ -59,7 +59,11 @@ class SensorController():
   def handle_messages(client, userdata, message):
     print(client)
     print(message)
-    """body = request.get_json()
+    data = dict(
+      topic=message.topic,
+      payload=message.payload.decode()
+    )
+    body = data
     sensor_reading = SensorReading(**body)
     result = sensors_readings.insert_one(sensor_reading.dict(exclude_none=True))
     sensor_reading_data = sensor_reading.dict(exclude_none=True)
