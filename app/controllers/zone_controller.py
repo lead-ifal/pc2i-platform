@@ -59,7 +59,7 @@ class ZoneController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
 
-  def toggle_irrigation(irrigation_status, zone_id=None):
+  def toggle_irrigation(zone_id=None):
     irrigation_status = not irrigation_status
     print(irrigation_status)
     data = []
