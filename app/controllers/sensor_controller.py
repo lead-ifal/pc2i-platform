@@ -2,7 +2,7 @@ import json
 import bcrypt
 from flask import jsonify, request
 from typing import Collection
-from app.extensions import database
+from app.extensions import database, mqtt
 from app.models.sensor import Sensor
 from app.controllers.global_controller import GlobalController
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
@@ -55,8 +55,11 @@ class SensorController():
     print(data)
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
-  def create_reading():
-    body = request.get_json()
+  @mqtt.on_message()
+  def handle_messages(client, userdata, message):
+    print(client)
+    print(message)
+    """body = request.get_json()
     sensor_reading = SensorReading(**body)
     result = sensors_readings.insert_one(sensor_reading.dict(exclude_none=True))
     sensor_reading_data = sensor_reading.dict(exclude_none=True)
@@ -69,4 +72,4 @@ class SensorController():
         sensor_reading_data
       )
 
-    raise Exception()
+    raise Exception()"""
