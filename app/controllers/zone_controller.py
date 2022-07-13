@@ -62,6 +62,7 @@ class ZoneController:
   def toggle_irrigation(irrigation_status, zone_id=None):
     irrigation_status = not irrigation_status
     print(irrigation_status)
+    data = []
     print(Config.PC2I_ESP_ADDRESS)
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_status)
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
     #requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(irrigation_status))
