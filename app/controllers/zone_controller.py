@@ -16,7 +16,7 @@ mqtt: mqtt
 
 class ZoneController:
   irrigation_status = False
-  
+
   def create():
     print(request)
     body = request.get_json()
@@ -64,7 +64,5 @@ class ZoneController:
   def toggle_irrigation(zone_id=None):
     ZoneController.irrigation_status = not ZoneController.irrigation_status
     print(ZoneController.irrigation_status)
-    data = []
     print(Config.PC2I_ESP_ADDRESS)
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
-    #requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(irrigation_status))
+    requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(ZoneController.irrigation_status))
