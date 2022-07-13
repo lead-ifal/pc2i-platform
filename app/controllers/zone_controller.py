@@ -63,5 +63,5 @@ class ZoneController:
     irrigation_status = not irrigation_status
     print(irrigation_status)
     print(Config.PC2I_ESP_ADDRESS)
-    return irrigation_status
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_status)
     #requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(irrigation_status))
