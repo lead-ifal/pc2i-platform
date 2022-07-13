@@ -13,8 +13,7 @@ irrigation_zones: Collection = database.db.irrigation_zones
 mqtt: mqtt
 
 class ZoneController:
-  def __init__(self):
-    self.irrigation_active = False
+  irrigation_active = False
 
   def create():
     print(request)
