@@ -1,4 +1,5 @@
 import requests
+from app.controllers.user_controller import UserController
 from config import Config
 from flask import jsonify, request
 from typing import Collection
@@ -59,6 +60,6 @@ class ZoneController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
 
-  def toggle_irrigation(self, zone_id=None):
-    self.irrigation_active = not self.irrigation_active
+  def toggle_irrigation(zone_id=None):
+    UserController.irrigation_active = not UserController.irrigation_active
     requests.get(Config.PC2I_ESP_IP+'/irrigation/'+ self.irrigation_active).content
