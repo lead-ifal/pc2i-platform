@@ -1,16 +1,17 @@
-from flask import request
+from flask import jsonify, request
 from typing import Collection
+from app.extensions import database, mqtt
 from app.controllers.global_controller import GlobalController
 from app.models.irrigation_zone import IrrigationZone
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
-from app import database
 
-irrigation_zones: Collection = database.irrigation_zones
+irrigation_zones: Collection = database.db.irrigation_zones
 
 class ZoneController:
   def create():
+    print(request)
     body = request.get_json()
     params = required_params['irrigation_zones']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
@@ -33,7 +34,7 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-  def list(user_id):
+  def show(user_id):
     irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })
     data = []
 
@@ -41,3 +42,21 @@ class ZoneController:
       data.append(irrigation_zone)
 
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+
+
+  def list():
+    irrigation_zone_list = irrigation_zones.find()
+    data = []
+
+    for irrigation_zone in irrigation_zone_list:
+      data.append(irrigation_zone)
+
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+
+
+  def publish_humidity(zone_id, value):
+    topic = 'pc2i/irrigation-zones/'+zone_id+'/humidity'
+    publish_result = mqtt.publish('topic', value)
+    print("teste")
+    print(publish_result)
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, "publish_result")
