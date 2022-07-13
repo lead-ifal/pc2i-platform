@@ -76,4 +76,4 @@ class SensorController():
         sensor_reading_data
       )
 
-    raise Exception()"""
+    raise Exception()
