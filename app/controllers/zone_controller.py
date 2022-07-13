@@ -12,9 +12,10 @@ from app.constants.required_params import required_params
 
 irrigation_zones: Collection = database.db.irrigation_zones
 mqtt: mqtt
-irrigation_status = False
+
 
 class ZoneController:
+  irrigation_status = False
   
   def create():
     print(request)
