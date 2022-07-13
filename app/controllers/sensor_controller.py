@@ -55,16 +55,23 @@ class SensorController():
     print(data)
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
+  def publish(sensor_id, value):
+    topic = 'pc2i/'+sensor_id
+    mqtt.subscribe(topic)
+    publish_result = mqtt.publish(topic, value)
+    print("teste")
+    print(publish_result)
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, "publish_result")
+
   @mqtt.on_message()
   def handle_messages(client, userdata, message):
-    print(client)
-    print(message)
-    data = dict(
-      topic=message.topic,
-      payload=message.payload.decode()
-    )
-    body = data
+    body = {
+        "sensor_id": message.topic.replace('pc2i/', ''),
+        "value": message.payload.decode(),
+    }
+    print(body)
     sensor_reading = SensorReading(**body)
+    print(sensor_reading)
     result = sensors_readings.insert_one(sensor_reading.dict(exclude_none=True))
     sensor_reading_data = sensor_reading.dict(exclude_none=True)
     sensor_reading_data['_id'] = result.inserted_id
