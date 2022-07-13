@@ -1,33 +1,35 @@
+import json
 import bcrypt
-from flask import request
+from flask import jsonify, request
 from typing import Collection
+from app.extensions import database
 from app.models.user import User
 from app.controllers.global_controller import GlobalController
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
-from app import database
 
-users: Collection = database.users
+users: Collection = database.db.users
 
-class UserController:
+class UserController():
+
   def encode_password(password: str):
     salt = bcrypt.gensalt()
     encoded_password = password.encode('utf8')
 
     return bcrypt.hashpw(encoded_password, salt)
   
-  def user_already_exists(email: str):
+  def user_already_exists(self, email: str):
     user_already_exists = True
 
-    saved_user = users.find_one({ 'email': email })
+    saved_user = self.users.find_one({ 'email': email })
 
     if saved_user is None:
       user_already_exists = False
 
     return { 'exists': user_already_exists, 'data': saved_user }
 
-  def create():
+  def create(self):
     body = request.get_json()
     params = required_params['users']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
@@ -41,7 +43,7 @@ class UserController:
           raise Exception()
 
         user = User(**body)
-        result = users.insert_one(user.dict(exclude_none=True))
+        result = self.users.insert_one(user.dict(exclude_none=True))
         user_data = user.dict(exclude_none=True, exclude={'password'})
         user_data['_id'] = result.inserted_id
 
@@ -55,6 +57,22 @@ class UserController:
 
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
+
+  def list():
+    users_list = users.find()
+    data = []
+
+    for user in users_list:
+      dictionary = {
+        "id": str(user['_id']),
+        "name": user['name'],
+        "email": user['email'],
+      }
+      data.append(json.dumps(dictionary))
+
+    print(data)
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+
 
   def login():
     body = request.get_json()
