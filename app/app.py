@@ -47,6 +47,11 @@ def configure_logger(app):
 def handle_connect(client, userdata, flags, rc):
   mqtt.subscribe('pc2i/irrigation-zones/#')
 
+@mqtt.on_subscribe()
+def handle_subscribe(client, userdata, mid, granted_qos):
+    print('Subscription id {} granted with qos {}.'
+          .format(mid, granted_qos))
+          
 @mqtt.on_message()
 def handle_mqtt_message(client, userdata, message):
   data = dict(
