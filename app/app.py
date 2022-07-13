@@ -54,7 +54,7 @@ def handle_mqtt_message(client, userdata, message):
     payload=message.payload.decode()
   )
   print(data)
-  SensorController.publish(data)
+  SensorController.create_reading(data)
   
 
 @mqtt.on_log()

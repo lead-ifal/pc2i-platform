@@ -53,7 +53,7 @@ class SensorController():
     print(data)
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
-  def publish(data):
+  def create_reading(data):
     body = data
     sensor = Sensor(**body)
     result = sensors.insert_one(sensor.dict(exclude_none=True))
