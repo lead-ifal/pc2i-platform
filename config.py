@@ -8,5 +8,5 @@ class Config:
   MONGO_URI = os.getenv('MONGO_URI')
   MQTT_BROKER_URL = os.getenv('BROKER_URL')
   MQTT_BROKER_PORT = 80
-  PC2I_ESP_IP = os.getenv('PC2I_ESP_IP')
+  PC2I_ESP_ADDRESS = os.getenv('PC2I_ESP_ADDRESS')
   
