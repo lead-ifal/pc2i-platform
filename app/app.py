@@ -1,7 +1,6 @@
 """The app module, containing the app factory function."""
 import logging
 import sys
-from app.controllers.sensor_controller import SensorController
 from app.extensions import (
     cors,
     database,
@@ -32,9 +31,11 @@ def register_blueprints(app):
     from .routes.users import users_bp
     from .routes.irrigation_zones import irrigation_zones_bp
     from .routes.cultures import cultures_bp
+    from .routes.sensors import sensors_bp
     app.register_blueprint(users_bp, url_prefix='/users')
     app.register_blueprint(irrigation_zones_bp, url_prefix='/irrigation-zones')
     app.register_blueprint(cultures_bp, url_prefix='/cultures')
+    app.register_blueprint(sensors_bp, url_prefix='/sensors')
     return None
 
 def configure_logger(app):
@@ -51,7 +52,7 @@ def handle_connect(client, userdata, flags, rc):
 def handle_subscribe(client, userdata, mid, granted_qos):
     print('Subscription id {} granted with qos {}.'
           .format(mid, granted_qos))
-          
+
 @mqtt.on_message()
 def handle_mqtt_message(client, userdata, message):
   data = dict(
@@ -59,7 +60,6 @@ def handle_mqtt_message(client, userdata, message):
     payload=message.payload.decode()
   )
   print(data)
-  SensorController.create_reading(data)
   
 
 @mqtt.on_log()
