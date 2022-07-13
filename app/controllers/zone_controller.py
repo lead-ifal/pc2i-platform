@@ -61,5 +61,5 @@ class ZoneController:
 
 
   def toggle_irrigation(zone_id=None):
-    UserController.irrigation_active = not UserController.irrigation_active
-    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+ self.irrigation_active).content
+    ZoneController.irrigation_active = not ZoneController.irrigation_active
+    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+ ZoneController.irrigation_active).content
