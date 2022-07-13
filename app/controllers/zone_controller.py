@@ -1,3 +1,5 @@
+import requests
+from config import Config
 from flask import jsonify, request
 from typing import Collection
 from app.extensions import database, mqtt
@@ -11,6 +13,9 @@ irrigation_zones: Collection = database.db.irrigation_zones
 mqtt: mqtt
 
 class ZoneController:
+  def __init__(self):
+    self.irrigation_active = False
+
   def create():
     print(request)
     body = request.get_json()
@@ -53,3 +58,8 @@ class ZoneController:
       data.append(irrigation_zone)
 
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+
+
+  def toggle_irrigation(self, zone_id=None):
+    self.irrigation_active = not self.irrigation_active
+    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+ self.irrigation_active).content
