@@ -12,9 +12,9 @@ from app.constants.required_params import required_params
 
 irrigation_zones: Collection = database.db.irrigation_zones
 mqtt: mqtt
+irrigation_active = False
 
 class ZoneController:
-  irrigation_active = False
 
   def create():
     print(request)
@@ -61,5 +61,5 @@ class ZoneController:
 
 
   def toggle_irrigation(zone_id=None):
-    ZoneController.irrigation_active = not ZoneController.irrigation_active
-    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+ ZoneController.irrigation_active).content
+    irrigation_active = not irrigation_active
+    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+ irrigation_active).content
