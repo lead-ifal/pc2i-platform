@@ -12,7 +12,6 @@ from app.constants.required_params import required_params
 
 irrigation_zones: Collection = database.db.irrigation_zones
 mqtt: mqtt
-irrigation_active = False
 
 class ZoneController:
 
@@ -60,6 +59,6 @@ class ZoneController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
 
-  def toggle_irrigation(zone_id=None):
-    irrigation_active = not irrigation_active
-    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+ irrigation_active).content
+  def toggle_irrigation(irrigation_status, zone_id=None):
+    irrigation_status = not irrigation_status
+    requests.get(Config.PC2I_ESP_IP+'/irrigation/'+irrigation_status).content
