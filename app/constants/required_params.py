@@ -8,5 +8,9 @@ required_params = {
   },
   'cultures': {
     'create': ['irrigation_zone_id', 'name', 'type', 'planting_date', 'phase', 'geographic_coordinates']
-  }
+  },
+  'sensors': {
+    'create': ['culture_id', 'name'],
+    'read': ['culture_id']
+  },
 }

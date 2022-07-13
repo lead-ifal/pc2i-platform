@@ -56,7 +56,7 @@ class ZoneController:
 
   def publish_humidity(zone_id, value):
     topic = 'pc2i/irrigation-zones/'+zone_id+'/humidity'
-    publish_result = mqtt.publish('topic', value)
+    publish_result = mqtt.publish(topic, value)
     print("teste")
     print(publish_result)
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, "publish_result")
