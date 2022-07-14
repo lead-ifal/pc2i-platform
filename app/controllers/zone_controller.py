@@ -43,13 +43,9 @@ class ZoneController:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
   def show(zone_id):
-    irrigation_zone_list = irrigation_zones.findone({ '_id': ObjectId(zone_id) })
-    data = []
+    irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
 
-    for irrigation_zone in irrigation_zone_list:
-      data.append(irrigation_zone)
-
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
 
 
   def list(user_id):
