@@ -59,18 +59,13 @@ class UserController():
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
   def list():
-    users_list = users.find()
+    users_list = users.find({}, {"password":0 })
     data = []
 
     for user in users_list:
-      dictionary = {
-        "id": str(user['_id']),
-        "name": user['name'],
-        "email": user['email'],
-      }
-      data.append(json.dumps(dictionary))
 
-    print(data)
+      data.append(user)
+
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
 
