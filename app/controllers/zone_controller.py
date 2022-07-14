@@ -1,3 +1,6 @@
+import requests
+from bson import ObjectId
+from config import Config
 from flask import jsonify, request
 from typing import Collection
 from app.extensions import database, mqtt
@@ -10,7 +13,11 @@ from app.constants.required_params import required_params
 irrigation_zones: Collection = database.db.irrigation_zones
 mqtt: mqtt
 
+
 class ZoneController:
+  irrigation_status = False
+
+
   def create():
     print(request)
     body = request.get_json()
@@ -35,7 +42,13 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-  def show(user_id):
+  def show(zone_id):
+    irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
+
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
+
+
+  def list(user_id):
     irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })
     data = []
 
@@ -45,11 +58,8 @@ class ZoneController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
 
-  def list():
-    irrigation_zone_list = irrigation_zones.find()
-    data = []
-
-    for irrigation_zone in irrigation_zone_list:
-      data.append(irrigation_zone)
-
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+  def toggle_irrigation(zone_id=None):
+    ZoneController.irrigation_status = not ZoneController.irrigation_status
+    print(ZoneController.irrigation_status)
+    print(Config.PC2I_ESP_ADDRESS)
+    requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(ZoneController.irrigation_status))
