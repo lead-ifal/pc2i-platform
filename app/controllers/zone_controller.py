@@ -1,5 +1,5 @@
 import requests
-from app.controllers.user_controller import UserController
+from bson import ObjectId
 from config import Config
 from flask import jsonify, request
 from typing import Collection
@@ -17,7 +17,7 @@ mqtt: mqtt
 class ZoneController:
   irrigation_status = False
 
-  
+
   def create():
     print(request)
     body = request.get_json()
@@ -42,8 +42,8 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-  def show(user_id):
-    irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })
+  def show(zone_id):
+    irrigation_zone_list = irrigation_zones.findone({ '_id': ObjectId(zone_id) })
     data = []
 
     for irrigation_zone in irrigation_zone_list:
@@ -52,8 +52,8 @@ class ZoneController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
 
-  def list():
-    irrigation_zone_list = irrigation_zones.find()
+  def list(user_id):
+    irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })
     data = []
 
     for irrigation_zone in irrigation_zone_list:
