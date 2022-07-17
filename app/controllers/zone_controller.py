@@ -1,5 +1,7 @@
 import requests
 from bson import ObjectId
+
+from app.models.schedule_irrigation import schedule_irrigation
 from config import Config
 from flask import jsonify, request
 from typing import Collection
@@ -11,6 +13,7 @@ from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 
 irrigation_zones: Collection = database.db.irrigation_zones
+scheduled_irrigations: Collection = database.db.scheduled_irrigations
 mqtt: mqtt
 
 
@@ -35,6 +38,30 @@ class ZoneController:
           HTTP_CREATED_CODE,
           SUCCESS_MESSAGE,
           irrigation_zone_data
+        )
+
+      raise Exception()
+
+    except:
+      return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
+
+  def schedule():
+    print(request)
+    body = request.get_json()
+    params = required_params['irrigation_zones']['schedule']
+    includes_params = GlobalController.includes_all_required_params(params, body)
+
+    try:
+      if includes_params:
+        scheduling =schedule_irrigation(**body)
+        schedule_irrigation_data = scheduling.dict(exclude_none=True)
+
+        scheduled_irrigations.insert_one(schedule_irrigation_data)
+
+        return GlobalController.generate_response(
+          HTTP_CREATED_CODE,
+          SUCCESS_MESSAGE,
+          schedule_irrigation_data
         )
 
       raise Exception()
