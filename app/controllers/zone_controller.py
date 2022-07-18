@@ -45,8 +45,7 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-  def schedule():
-    print(request)
+  def schedule_irrigation():
     body = request.get_json()
     params = required_params['irrigation_zones']['schedule']
     includes_params = GlobalController.includes_all_required_params(params, body)

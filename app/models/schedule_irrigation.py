@@ -6,5 +6,6 @@ class schedule_irrigation(BaseModel):
     id: Optional[PydanticObjectId] = Field(alias="_id")
     irrigation_zone_id: str
     liters_of_water: int
-    day: str
+    days: list
     time: int
+    moment_of_activation: float
