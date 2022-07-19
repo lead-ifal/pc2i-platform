@@ -14,7 +14,9 @@ Siga os passos do arquivo [CONTRIBUTING.md](./CONTRIBUTING.md), caso queira cont
 - [Python](https://python.org/downloads)
 
 ## :twisted_rightwards_arrows: Rotas da API
-Todas as rotas da API estão documentadas no arquivo [ROUTES.md](./ROUTES.md).
+Todas as rotas da API foram documentadas utilizando o [Postman](https://postman.com).
+
+Para acessar a documentação, [clique aqui](https://documenter.getpostman.com/view/21952024/UzQypiBw).
 
 ## :compass: Guia de Instalação
 > Com as ferramentas devidamente instaladas, execute os seguintes comandos no terminal (bash, powershell, cmd...)
