@@ -1,7 +1,7 @@
 import requests
 from bson import ObjectId
 
-from app.models.schedule_irrigation import schedule_irrigation
+from app.models.schedule_irrigation import ScheduleIrrigation
 from config import Config
 from flask import jsonify, request
 from typing import Collection
@@ -52,7 +52,7 @@ class ZoneController:
 
     try:
       if includes_params:
-        scheduling =schedule_irrigation(**body)
+        scheduling = ScheduleIrrigation(**body)
         schedule_irrigation_data = scheduling.dict(exclude_none=True)
 
         scheduled_irrigations.insert_one(schedule_irrigation_data)
