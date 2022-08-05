@@ -1,8 +1,8 @@
 import json
-import bcrypt
-from flask import jsonify, request
+from flask import request
 from typing import Collection
 from app.extensions import database, mqtt
+from app.middlewares.has_token import has_token
 from app.models.sensor import Sensor
 from app.controllers.global_controller import GlobalController
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
@@ -14,7 +14,7 @@ sensors: Collection = database.db.sensors
 sensors_readings: Collection = database.db.sensors_readings
 
 class SensorController():
-
+  @has_token
   def create():
     body = request.get_json()
     params = required_params['sensors']['create']
@@ -55,6 +55,7 @@ class SensorController():
     print(data)
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
+  @has_token
   def publish(sensor_id, value):
     topic = 'pc2i/'+sensor_id
     mqtt.subscribe(topic)
