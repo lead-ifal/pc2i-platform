@@ -65,4 +65,8 @@ class CultureController:
     data = None
     if (len(culture_id)) == 24:
       data =  cultures.find_one({ '_id': ObjectId(culture_id)})
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+    if data != None:
+      return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+    else:
+      data = "A cultura informada não existe"
+      return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE, data)

@@ -75,9 +75,11 @@ class ZoneController:
     irrigation_zone = None
     if (len(zone_id)) == 24:
       irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
-
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
-
+    if irrigation_zone != None:
+       return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
+    else:
+      irrigation_zone = "A zona de irrigacao não existe"
+      return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE, irrigation_zone)
 
   def list(user_id):
     irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })
