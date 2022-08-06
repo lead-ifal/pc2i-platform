@@ -62,5 +62,7 @@ class CultureController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
   def show(culture_id):
-    data =  cultures.find_one({ '_id': ObjectId(culture_id)})
+    data = None
+    if (len(culture_id)) == 24:
+      data =  cultures.find_one({ '_id': ObjectId(culture_id)})
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)

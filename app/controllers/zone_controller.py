@@ -12,6 +12,7 @@ from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, 
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 
+
 irrigation_zones: Collection = database.db.irrigation_zones
 scheduled_irrigations: Collection = database.db.scheduled_irrigations
 mqtt: mqtt
@@ -68,8 +69,12 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
+
+
   def show(zone_id):
-    irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
+    irrigation_zone = None
+    if (len(zone_id)) == 24:
+      irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
 
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
 
