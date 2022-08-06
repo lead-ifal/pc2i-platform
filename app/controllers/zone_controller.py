@@ -8,7 +8,7 @@ from typing import Collection
 from app.extensions import database, mqtt
 from app.controllers.global_controller import GlobalController
 from app.models.irrigation_zone import IrrigationZone
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 
@@ -72,14 +72,13 @@ class ZoneController:
 
 
   def show(zone_id):
-    irrigation_zone = None
-    if (len(zone_id)) == 24:
+    try:
       irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
-    if irrigation_zone != None:
-       return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
-    else:
-      irrigation_zone = "A zona de irrigacao não existe"
-      return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE, irrigation_zone)
+      if irrigation_zone != None:
+         return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
+      raise Exception()
+    except:
+      return GlobalController.generate_response(HTTP_NOT_FOUND, ERROR_MESSAGE)
 
   def list(user_id):
     irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })

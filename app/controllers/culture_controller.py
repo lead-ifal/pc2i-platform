@@ -4,7 +4,7 @@ from datetime import datetime
 from app.extensions import database
 from app.controllers.global_controller import GlobalController
 from app.models.culture import Culture
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 from typing import Collection
@@ -62,11 +62,10 @@ class CultureController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
   def show(culture_id):
-    data = None
-    if (len(culture_id)) == 24:
+    try:
       data =  cultures.find_one({ '_id': ObjectId(culture_id)})
-    if data != None:
-      return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
-    else:
-      data = "A cultura informada não existe"
-      return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE, data)
+      if data != None:
+        return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+      raise Exception()
+    except:
+      return GlobalController.generate_response(HTTP_NOT_FOUND, ERROR_MESSAGE)
