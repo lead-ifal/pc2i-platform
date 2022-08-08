@@ -1,6 +1,8 @@
 import requests
 from bson import ObjectId
-
+import threading
+import time
+from datetime import datetime , timedelta
 from app.models.schedule_irrigation import ScheduleIrrigation
 from config import Config
 from flask import jsonify, request
@@ -8,8 +10,8 @@ from typing import Collection
 from app.extensions import database, mqtt
 from app.controllers.global_controller import GlobalController
 from app.models.irrigation_zone import IrrigationZone
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND,HTTP_SERVER_ERROR
-from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, ZONE_NOT_FOUND,INTERNAL_SERVER_ERROR
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND_CODE
+from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, ZONE_NOT_FOUND_MESSAGE
 from app.constants.required_params import required_params
 
 
@@ -72,17 +74,13 @@ class ZoneController:
 
 
   def show(zone_id):
-    try:
       irrigation_zone = None
       if (len(zone_id)) == 24:
         irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
       if irrigation_zone != None:
         return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
-      return GlobalController.generate_response(HTTP_NOT_FOUND, ZONE_NOT_FOUND)
+      return GlobalController.generate_response(HTTP_NOT_FOUND_CODE, ZONE_NOT_FOUND_MESSAGE)
 
-      raise Exception()
-    except:
-      return GlobalController.generate_response(HTTP_SERVER_ERROR,INTERNAL_SERVER_ERROR )
 
   def list(user_id):
     irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })
@@ -99,3 +97,4 @@ class ZoneController:
     print(ZoneController.irrigation_status)
     print(Config.PC2I_ESP_ADDRESS)
     requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(ZoneController.irrigation_status))
+

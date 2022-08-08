@@ -4,8 +4,8 @@ from datetime import datetime
 from app.extensions import database
 from app.controllers.global_controller import GlobalController
 from app.models.culture import Culture
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND,HTTP_SERVER_ERROR
-from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, CULTURE_NOT_FOUND,INTERNAL_SERVER_ERROR
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND_CODE
+from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, CULTURE_NOT_FOUND_MESSAGE
 from app.constants.required_params import required_params
 from typing import Collection
 
@@ -62,13 +62,9 @@ class CultureController:
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
   def show(culture_id):
-    try:
       data = None
       if (len(culture_id)) == 24:
         data =  cultures.find_one({ '_id': ObjectId(culture_id)})
       if data != None:
         return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
-      return GlobalController.generate_response(HTTP_NOT_FOUND, CULTURE_NOT_FOUND)
-      raise Exception()
-    except:
-      return GlobalController.generate_response(HTTP_SERVER_ERROR, INTERNAL_SERVER_ERROR)
+      return GlobalController.generate_response(HTTP_NOT_FOUND_CODE, CULTURE_NOT_FOUND_MESSAGE)
