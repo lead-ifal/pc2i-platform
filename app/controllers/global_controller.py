@@ -23,3 +23,10 @@ class GlobalController:
       status = status,
       mimetype = 'application/json'
     )
+
+  def is_valid_id(id):
+    ZONE_ID_LENGTH = 24
+    if (len(id)) == ZONE_ID_LENGTH:
+      return True
+    else:
+      return False
