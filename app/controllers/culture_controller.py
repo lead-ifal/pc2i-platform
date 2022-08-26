@@ -5,8 +5,10 @@ from app.extensions import database
 from app.controllers.global_controller import GlobalController
 from app.middlewares.has_token import has_token
 from app.models.culture import Culture
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
-from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND_CODE, \
+  HTTP_SERVER_ERROR_CODE
+from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, CULTURE_NOT_FOUND_MESSAGE, \
+  INTERNAL_SERVER_ERROR_MESSAGE
 from app.constants.required_params import required_params
 from typing import Collection
 
@@ -63,6 +65,16 @@ class CultureController:
 
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
+
+
   def show(culture_id):
-    data =  cultures.find_one({ '_id': ObjectId(culture_id)})
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+    try:
+      data = None
+      valid_id = GlobalController.is_valid_mongodb_id(culture_id)
+      if valid_id:
+        data = cultures.find_one({'_id': ObjectId(culture_id)})
+        if data != None:
+          return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+      return GlobalController.generate_response(HTTP_NOT_FOUND_CODE, CULTURE_NOT_FOUND_MESSAGE)
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE,INTERNAL_SERVER_ERROR_MESSAGE)
