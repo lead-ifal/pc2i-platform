@@ -23,3 +23,8 @@ class GlobalController:
       status = status,
       mimetype = 'application/json'
     )
+
+  def is_valid_mongodb_id(id):
+    MONGODB_ID_LENGTH = 24
+
+    return len(id) == MONGODB_ID_LENGTH
