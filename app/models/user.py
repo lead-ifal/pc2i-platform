@@ -5,7 +5,6 @@ from app.models.objectid import PydanticObjectId
 
 class User(BaseModel):
   id: Optional[PydanticObjectId] = Field(alias="_id")
-  token: str
   email: str
   name: str
   password: bytes
