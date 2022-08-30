@@ -1,18 +1,21 @@
 from flask import request
 from bson import ObjectId
 from datetime import datetime
+from app.extensions import database
 from app.controllers.global_controller import GlobalController
+from app.middlewares.has_token import has_token
 from app.models.culture import Culture
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 from typing import Collection
-from app import database, pymongo_client
 
-cultures: Collection = database.cultures
-irrigation_zones: Collection = database.irrigation_zones
+
+cultures: Collection = database.db.cultures
+irrigation_zones: Collection = database.db.irrigation_zones
 
 class CultureController:
+  @has_token
   def create():
     body = { **request.form.to_dict(), **request.files.to_dict() }
     params = required_params['cultures']['create']
@@ -40,7 +43,7 @@ class CultureController:
             image_filename = '{}-{}'.format(now, body['image'].filename)
             culture_data['image'] = image_filename
 
-            pymongo_client.save_file(image_filename, body['image'])
+            database.save_file(image_filename, body['image'])
 
           cultures.insert_one(culture_data)
 

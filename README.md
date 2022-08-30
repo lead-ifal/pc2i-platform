@@ -14,6 +14,7 @@ Siga os passos do arquivo [CONTRIBUTING.md](./CONTRIBUTING.md), caso queira cont
 - [Python](https://python.org/downloads)
 
 ## :twisted_rightwards_arrows: Rotas da API
+<<<<<<< HEAD
 Todas as rotas da API estão documentadas no arquivo [ROUTES.md](./ROUTES.md).
 
 ## :compass: Guia de Instalação
@@ -40,6 +41,36 @@ python -m venv venv
 py -3 -m venv venv
 ```
 
+=======
+Todas as rotas da API foram documentadas utilizando o [Postman](https://postman.com).
+
+Para acessar a documentação, [clique aqui](https://documenter.getpostman.com/view/21952024/UzQypiBw).
+
+## :compass: Guia de Instalação
+> Com as ferramentas devidamente instaladas, execute os seguintes comandos no terminal (bash, powershell, cmd...)
+
+### **1. Clonar repositório**
+```bash
+git clone https://github.com/lead-ifal/pc2i-platform.git
+```
+
+### **2. Entrar na pasta do projeto**
+```bash
+cd pc2i-platform
+```
+
+### **3. Criar ambiente virtual do Flask**
+```bash
+# Linux e MacOS
+python -m venv venv
+```
+
+```bash
+# Windows
+py -3 -m venv venv
+```
+
+>>>>>>> e85246450d871000a2ae4bb0838dcf3bb183511b
 ### **4. Ativar ambiente virtual**
 ```bash
 # Linux e MacOS

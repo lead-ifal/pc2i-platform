@@ -3,10 +3,8 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from app.models.objectid import PydanticObjectId
 
-class User(BaseModel):
+class Sensor(BaseModel):
   id: Optional[PydanticObjectId] = Field(alias="_id")
-  token: str
-  email: str
+  culture_id: str
   name: str
-  password: bytes
-  date_added: datetime = datetime.utcnow()
+  type: int
