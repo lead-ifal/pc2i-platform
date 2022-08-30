@@ -39,8 +39,8 @@ class SensorController():
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-  def list():
-    sensors_list = sensors.find()
+  def list(zone_id):
+    sensors_list = sensors.find(irrigation_zone_id)
     data = []
 
     for sensor in sensors_list:
