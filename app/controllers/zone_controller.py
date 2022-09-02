@@ -9,8 +9,10 @@ from app.extensions import database, mqtt
 from app.middlewares.has_token import has_token
 from app.controllers.global_controller import GlobalController
 from app.models.irrigation_zone import IrrigationZone
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
-from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE, HTTP_NOT_FOUND_CODE, \
+  HTTP_SERVER_ERROR_CODE
+from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, ZONE_NOT_FOUND_MESSAGE, \
+  INTERNAL_SERVER_ERROR_MESSAGE
 from app.constants.required_params import required_params
 
 irrigation_zones: Collection = database.db.irrigation_zones
@@ -68,10 +70,19 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-  def show(zone_id):
-    irrigation_zone = irrigation_zones.find_one({ '_id': ObjectId(zone_id) })
 
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
+  def show(zone_id):
+    try:
+      irrigation_zone = None
+      valid_id = GlobalController.is_valid_mongodb_id(zone_id)
+      if valid_id:
+        irrigation_zone = irrigation_zones.find_one({'_id': ObjectId(zone_id)})
+        if irrigation_zone != None:
+          return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone)
+      return GlobalController.generate_response(HTTP_NOT_FOUND_CODE, ZONE_NOT_FOUND_MESSAGE)
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
+
 
   def list(user_id):
     irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })

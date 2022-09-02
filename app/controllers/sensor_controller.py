@@ -40,7 +40,7 @@ class SensorController():
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
   def list(user_id):
-    sensors_zone_list = sensors_zones.find(user_id)
+    sensors_zone_list = sensors_zones.find({ 'user_id' : user_id })
     data = []
 
     for sensor in sensors_list:
@@ -52,7 +52,7 @@ class SensorController():
       }
       data.append(json.dumps(dictionary))
 
-    print(data)
+  
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
   @has_token
