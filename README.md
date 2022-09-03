@@ -1,37 +1,30 @@
 # PC2I - Platform
 Repositório de código da plataforma e API para gerenciamento de irrigação promovido pelo projeto PC2I.
 
-Siga os passos do arquivo [CONTRIBUTING.md](./CONTRIBUTING.md), caso queira contribuir com novas funcionalidades, melhorias e/ou correções no projeto.
-
-## :open_file_folder: Conteúdo:
-- [Pré-requisitos](#warning-pré-requisitos)
-- [Rotas da API](#twisted_rightwards_arrows-rotas-da-api)
-- [Guia de Instalação](#compass-guia-de-instalação)
-
 ## :warning: Pré-Requisitos
 > Antes de começar, verifique se as seguintes ferramentas estão instaladas em sua máquina
 - [Git](https://git-scm.com/downloads)
 - [Python](https://python.org/downloads)
 
-## :twisted_rightwards_arrows: Rotas da API
-Todas as rotas da API foram documentadas utilizando o [Postman](https://postman.com).
+## :fire: Como contribuir
+Para contribuir com código ou sugestões de melhorias/correções na plataforma do projeto PC2I, acesse o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-Para acessar a documentação, [clique aqui](https://documenter.getpostman.com/view/21952024/UzQypiBw).
+Caso possua alguma dúvida ou curiosidade sobre trabalho colaborativo com Git e GitHub, entre em contato com um dos membros do repositório.
 
 ## :compass: Guia de Instalação
 > Com as ferramentas devidamente instaladas, execute os seguintes comandos no terminal (bash, powershell, cmd...)
 
-### **1. Clonar repositório**
+### 1. Clone o repositório
 ```bash
 git clone https://github.com/lead-ifal/pc2i-platform.git
 ```
 
-### **2. Entrar na pasta do projeto**
+### 2. Entre na pasta do projeto
 ```bash
 cd pc2i-platform
 ```
 
-### **3. Criar ambiente virtual do Flask**
+### 3. Crie o ambiente virtual do Flask
 ```bash
 # Linux e MacOS
 python -m venv venv
@@ -42,7 +35,7 @@ python -m venv venv
 py -3 -m venv venv
 ```
 
-### **4. Ativar ambiente virtual**
+### 4. Ative o ambiente virtual
 ```bash
 # Linux e MacOS
 . venv/bin/activate
@@ -53,27 +46,42 @@ py -3 -m venv venv
 venv\Scripts\activate
 ```
 
-### **5. Instalar dependências**
+### 5. Instale as dependências
 ```bash
 # Linux, MacOS e Windows
 pip install -r requirements.txt
 ```
 
-### **6. Criar arquivo de variáveis de ambiente**
-Você pode usar o arquivo [`.env-example`](./.env-example) como base, definindo a localização (URL) do _cluster_ do _MongoDB_.
+### 6. Crie o arquivo de variáveis de ambiente
+Acesse o arquivo [MONGO_CONFIG.md](./MONGO_CONFIG.md) e obtenha a URL do banco de dados.
 
-Você pode encontrar no arquivo [MONGO_CONFIG.md](./MONGO_CONFIG.md) um guia de como criar e obter a URL do _cluster_.
+Com a URL do banco, crie uma cópia do arquivo [`.env.example`](./.env.example) com o nome de `.env`.
 
-### **7. Executar aplicação**
+No arquivo `.env`, coloque a URL do banco depois de `MONGO_URI=(aqui)`.
+
+### 7. Execute a aplicação
 ```bash
 # Linux, MacOS e Windows
 python __init__.py
 ```
 
-A aplicação será executada em `http://localhost:5000`.
+No terminal, aparecerá algo assim:
 
-### **8. Realizando solicitação à API**
-Utilizando uma ferramenta como Postman ou Thunder Client, realize uma solicitação de teste à API. No exemplo abaixo, requisitamos que a API nos retorne a lista de zonas de irrigação cadastradas na banco:
 ```bash
-GET http://localhost:5000/irrigation-zones
+* Serving Flask app 'app' (lazy loading)
+* Environment: production
+  WARNING: This is a development server. Do not use it in a production deployment.
+  Use a production WSGI server instead.
+* Debug mode: on
+* Running on all addresses.
+  WARNING: This is a development server. Do not use it in a production deployment.
+* Running on http://192.168.1.110:1026/ (Press CTRL+C to quit)
+* Restarting with stat
+* Debugger is active!
+* Debugger PIN: 103-964-359
 ```
+
+A plataforma estará executando na URL informada (por exemplo, `http://192.168.1.110:1026/`)
+
+## :fire: Teste da plataforma/API
+Instale um cliente HTTP, como o [Postman](https://postman.com/downloads/), e obtenha as rotas da API acessando [esta documentação](https://documenter.getpostman.com/view/21952024/UzQypiBw).
