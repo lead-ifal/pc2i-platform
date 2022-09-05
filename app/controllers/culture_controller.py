@@ -70,7 +70,7 @@ class CultureController:
   def show(culture_id):
     try:
       data = None
-      valid_id = GlobalController.is_valid_id(culture_id)
+      valid_id = GlobalController.is_valid_mongodb_id(culture_id)
       if valid_id:
         data = cultures.find_one({'_id': ObjectId(culture_id)})
         if data != None:

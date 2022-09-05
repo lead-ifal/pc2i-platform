@@ -78,7 +78,7 @@ class ZoneController:
   def show(zone_id):
     try:
       irrigation_zone = None
-      valid_id = GlobalController.is_valid_id(zone_id)
+      valid_id = GlobalController.is_valid_mongodb_id(zone_id)
       if valid_id:
         irrigation_zone = irrigation_zones.find_one({'_id': ObjectId(zone_id)})
         if irrigation_zone != None:
