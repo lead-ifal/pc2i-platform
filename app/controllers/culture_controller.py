@@ -59,32 +59,28 @@ class CultureController:
   @has_token
   def delete():
     body = request.get_json()
-    params = required_params['cultures']['delete']
+    params = ['culture_id']
     includes_params = GlobalController.includes_all_required_params(params, body)
     try:
       if includes_params:
-        culture_exists = False
-        id = body["culture_id"]
-        valid_id = GlobalController.is_valid_mongodb_id(id)
+        culture_id = body["culture_id"]
+        valid_id = GlobalController.is_valid_mongodb_id(culture_id)
         if valid_id:
-          culture_exists = cultures.count({'_id': ObjectId(id)}) == 1
-        if culture_exists:
-          cultures.delete_one({'_id': ObjectId(id)})
-
+          cultures.find_one_and_delete({'_id': ObjectId(culture_id)})
           return GlobalController.generate_response(
             HTTP_SUCCESS_CODE,
             SUCCESS_MESSAGE,
-            id
+            culture_id
           )
         else:
-          return GlobalController.generate_response(HTTP_NOT_FOUND_CODE, CULTURE_NOT_FOUND_MESSAGE)
+          return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
       raise Exception()
     except:
       return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
 
   @has_token
-  def edit():
+  def update():
     body = {**request.form.to_dict(), **request.files.to_dict()}
     params = required_params['cultures']['update']
     includes_params = GlobalController.includes_all_required_params(params, body)
@@ -99,14 +95,8 @@ class CultureController:
 
         if 'harvest_date' in body:
           body['harvest_date'] = datetime.fromisoformat(body['harvest_date'])
-
-        culture_exists = False
-        id = body["culture_id"]
-        valid_id = GlobalController.is_valid_mongodb_id(id)
-        if valid_id:
-          culture_exists = cultures.count({'_id': ObjectId(id)}) == 1
-
-        if culture_exists:
+        culture_id = body["culture_id"]
+        if GlobalController.is_valid_mongodb_id(culture_id):
           body.pop("culture_id")
           culture = Culture(**body)
           culture_data = culture.dict(exclude_none=True)
@@ -114,18 +104,16 @@ class CultureController:
             now = datetime.now().strftime('%Y%m%d%H%M%S')
             image_filename = '{}-{}'.format(now, body['image'].filename)
             culture_data['image'] = image_filename
-
             database.save_file(image_filename, body['image'])
-
-          cultures.update_one({'_id': ObjectId(id)}, {"$set": culture_data})
+            cultures.find_one_and_update({'_id': ObjectId(culture_id)}, {"$set": culture_data})
           return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, culture_data)
         else:
-          return GlobalController.generate_response(HTTP_NOT_FOUND_CODE, CULTURE_NOT_FOUND_MESSAGE)
+          return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
       raise Exception()
 
     except:
-      return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
 
   def list(irrigation_zone_id):
     culture_list = cultures.find({ 'irrigation_zone_id': irrigation_zone_id })
