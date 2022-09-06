@@ -1,86 +1,173 @@
 # Como contribuir com o projeto
 > Siga os passos abaixo para contribuir com código ou sugestões de melhorias/correções na plataforma do projeto PC2I
 
-## :open_file_folder: Conteúdo:
-- [Pré-Requisitos](#1-pré-requisitos)
-- [Instalação](#2-siga-os-passos-do-guia-de-instalação)
-- [Sincronização](#3-antes-de-tudo-sincronize-com-o-repositório-remoto)
-- [Criar uma _branch_](#4-crie-uma-branch)
-- [Realizar as alterações](#5-realize-as-alterações-necessárias)
-- [Registrar as alterações](#6-registre-as-alterações-realizadas)
-- [Submeter contribuição](#7-enviar-as-modificações-para-análise)
-- [Solicitar avaliação](#8-abra-um-pull-request-pr-para-os-mais-íntimos)
-- :pencil: [Sugerir melhorias ou correções](#pencil-sugerir-melhorias-ou-correções)
+## Pré-Requisitos
+> Instale as ferramentas abaixo
 
----
-
-## 1. Pré-Requisitos
-- [Git](https://git-scm.com/downloads) - versionamento de código;  
+- [Git](https://git-scm.com/downloads) - versionamento de código;
 - [Python](https://python.org/downloads) - desenvolvimento da plataforma;
 - Editor de código (ex.: [Visual Studio Code](https://code.visualstudio.com/Download));
 
-## 2. Siga os passos do [Guia de Instalação](./README.md#🧭-guia-de-instalação)
-Com isso, você terá tudo o que é necessário para executar a aplicação.
+---
 
-Após seguir todos os passos do guia, execute as seguintes instruções:
+## Execute a plataforma
+Vá até o [guia de instalação](./README.md#compass-guia-de-instalação) e siga o passo a passo para ter a plataforma executando na sua máquina.
 
-## 3. Antes de tudo, sincronize com o repositório remoto
-Para evitar conflitos com o código principal que está no repositório remoto (`github.com/lead-ifal/pc2i-platform`), **SEMPRE** execute o comando abaixo antes de realizar qualquer modificação:
+---
+
+## Crie uma _branch_
+O `nome-da-branch` deve descrever de forma clara e objetiva as alterações que você fará
+
+```bash
+git checkout -b nome-da-branch
+
+# Exemplos:
+# git checkout -b rota-listagem-usuarios
+# git checkout -b corrigir-cadastro-zonas
+# git checkout -b autenticacao-usuarios
+```
+
+---
+
+## Altere o código
+Agora você pode modificar os arquivos existentes no projeto ou até criar novos arquivos e pastas, caso seja necessário.
+
+:warning: Tome cuidado para alterar apenas o que foi proposto na _branch_. Não faça grandes alterações, pois quanto maior a quantidade de alterações, mais dificíl será revisar seu código.
+
+---
+
+## Registre as alterações
+### 1. Adicione as alterações ao Git:
+
+```bash
+git add .
+```
+
+- Caso queira adicionar um arquivo específico, troque `.` pelo endereço do arquivo. Exemplo:
+
+```bash
+git add app/__init__.py
+```
+
+### 2. Registre as alterações
+
+```bash
+git commit -m "Mensagem"
+```
+
+- No lugar de `Mensagem`, descreva as alterações que você fez de forma clara e objetiva. Exemplo:
+
+```bash
+git commit -m "Adicao da rota de listagem de usuarios"
+```
+
+---
+
+## Envie para análise
+```bash
+git push -u origin nome-da-branch
+```
+
+O `nome-da-branch` deve ser o mesmo que foi informado na [criação da _branch_](#crie-uma-branch).
+
+---
+
+## Abra um _Pull Request_ (PR)
+### 1. Clique em "**Pull Requests**"
+
+![imagem](https://user-images.githubusercontent.com/63798776/188283632-c4941df5-ca48-4964-8faa-98213f36fbf3.png)
+
+### 2. Clique em "**New pull request**"
+
+![imagem](https://user-images.githubusercontent.com/63798776/188283687-05181d74-87da-4f32-80a0-75d1a4a5ee4c.png)
+
+### 3. Escolha as _branchs_
+Garanta que a comparação de _branches_ esteja assim:
+
+![imagem](https://user-images.githubusercontent.com/63798776/188282775-345e460a-fb70-4887-a8c1-6d9e5011ec63.png)
+
+- Onde `sua-branch` é o nome que você definiu na [criação da _branch_](#crie-uma-branch).
+
+### 4. Abra o PR
+Clique em "**Create pull request**", descreva o que você fez, adicione um revisor e espere as revisões
+
+---
+
+## Faça as correções
+Caso alguém peça correções no seu _pull request_, siga esse passo a passo:
+
+### 1. Verifique se a _branch_ ativa é a mesma do PR
+```bash
+git branch
+
+# Vai aparecer algo assim:
+# * nome-da-branch
+#   main
+
+# A branch ativa é a que tem o asterisco
+```
+
+- Se a _branch_ for diferente, altere pra ela:
+```bash
+git checkout nome-da-branch
+```
+
+### 2. Faça as correções que foram pedidas no PR
+
+### 3. Adicione ao versionamento
+```bash
+git add .
+```
+
+### 4. Registre as correções
+```bash
+git commit --amend --no-edit
+```
+
+### 5. Envie pro GitHub
+```bash
+git push origin nome-da-branch --force
+```
+
+- Caso resulte em erro, sincronize com o GitHub:
+
+```bash
+git pull origin nome-da-branch --rebase
+```
+
+### 7. Avise os revisores
+Adicione um comentário abaixo da revisão que você corrigiu pra quem fez ser notificado e avaliar novamente
+
+---
+
+## Finalize a _branch_
+> :warning: Só execute este passo quando o seu _pull request_ for **aprovado e adicionado à _branch_ principal** (_merge_) por uma pessoa autorizada (revisor).
+
+1. Altere para a _branch_ principal
+
+```bash
+git checkout main
+```
+
+2. Sincronize com o GitHub
 
 ```bash
 git pull origin main
 ```
 
-Assim, você evitará muitos problemas e todo mundo fica feliz ;)
-
-## 4. Crie uma _branch_
-> Não sabe o que é uma _branch_? Não tem problema, [clique aqui](https://git-scm.com/book/pt-br/v2/Branches-no-Git-Branches-em-poucas-palavras) para entender o seu significado e utilização.
+3. Exclua a _branch_ que você estava trabalhando
 
 ```bash
-git checkout -b <branch>
-# Troque <branch> pelo nome da funcionalidade ou correção que você implementará (ex.: feature/login-route)
+git branch -d nome-da-branch
 ```
 
-## 5. Realize as alterações necessárias
-Agora você pode modificar os arquivos existentes no projeto ou até criar novos arquivos e pastas, caso seja necessário.
+Caso queira trabalhar em outra funcionalidade/correção, [crie uma nova _branch_](#crie-uma-branch).
 
-## 6. Registre as alterações realizadas
-Após realizar as alterações necessárias, adicione-as ao Git com os seguintes comandos:
-
-```bash
-git add .
-# Caso queira adicionar um arquivo específico, troque "." pelo endereço do arquivo (ex.: git add app/__init__.py)
-```
-
-```bash
-git commit -m "Mensagem"
-# No lugar de Mensagem, descreva as alterações que você fez, preferencialmente em inglês, de forma breve
-```
-
-## 7. Enviar as modificações para análise
-Após fazer e registrar as alterações, é necessário enviá-las para o repositório remoto. Assim, todos poderão ver a sua contribuição.
-
-Para enviar suas modificações, execute o seguinte comando:
-
-```bash
-git push origin <branch>
-# Troque <branch> pelo nome da branch que você criou no passo 4 deste guia
-```
-
-## 8. Abra um _Pull Request_ (PR para os mais íntimos)
-> Não sabe o que é um _Pull Request_? [Clique aqui](https://docs.github.com/pt/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) para entender o seu propósito.
-
-Você pode seguir [este guia](https://docs.github.com/pt/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) para criar um _pull request_.
-
-Após a criação do PR, espere alguém analisar o seu código e indicar o que deve ser feito.
-
-Caso seja exigida alguma alteração, você pode realizar as correções, seguindo do [passo 5](#5-realize-as-alterações-necessárias) deste guia em diante.
+---
 
 ## :pencil: Sugerir melhorias ou correções
 Caso você ainda não sinta segurança em contribuir com código ou encontrou um problema/situação de melhoria e quer reportar, crie uma _issue_.
 
 Utilize [este guia](https://docs.github.com/pt/issues/tracking-your-work-with-issues/creating-an-issue) para reportar um problema ou indicar uma melhoria através de _issues_.
 
----
-
-Surgiu alguma dúvida? Entre em contato com um dos membros do repositório ;)
+### :question: Surgiu alguma dúvida? Entre em contato com um dos membros do repositório
