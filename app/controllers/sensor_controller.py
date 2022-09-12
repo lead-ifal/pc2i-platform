@@ -5,7 +5,7 @@ from app.extensions import database, mqtt
 from app.middlewares.has_token import has_token
 from app.models.sensor import Sensor
 from app.controllers.global_controller import GlobalController
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE,HTTP_SERVER_ERROR_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 from app.models.sensor_reading import SensorReading
@@ -39,21 +39,17 @@ class SensorController():
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-  def list(user_id):
-    sensors_zone_list = sensors_zones.find({ 'user_id' : user_id })
-    data = []
+  def list(irrigation_zone_id):
 
-    for sensor in sensors_list:
-      dictionary = {
-        "id": str(sensor['_id']),
-        "culture_id": sensor['culture_id'],
-        "name": sensor['name'],
-        "type": sensor['type'],
-      }
-      data.append(json.dumps(dictionary))
+    try:
+      sensors_zone_list = sensors.find({ 'irrigation_zone_id' : irrigation_zone_id})
+      data = []
+      for sensor in sensors_zone_list: 
+        data.append(sensor)
 
-  
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+      return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+    except: 
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, ERROR_MESSAGE)
 
   @has_token
   def publish(sensor_id, value):
