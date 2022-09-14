@@ -98,3 +98,16 @@ class ZoneController:
     print(ZoneController.irrigation_status)
     print(Config.PC2I_ESP_ADDRESS)
     requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(ZoneController.irrigation_status))
+
+  def schedule_irrigation_list(zone_id):
+    try:
+      schedule_irrigation_zone_list = scheduled_irrigations.find({ 'irrigation_zone_id': zone_id })
+      data = []
+
+      for schedule in  schedule_irrigation_zone_list:
+        data.append(schedule)
+
+      return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
