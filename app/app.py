@@ -1,8 +1,6 @@
 """The app module, containing the app factory function."""
 import logging
 import sys
-import threading
-
 
 
 from app.extensions import (
@@ -22,9 +20,8 @@ def create_app(config_object):
     register_extensions(app)
     register_blueprints(app)
     configure_logger(app)
-    from app.controllers.zone_controller import ZoneController
-    thead = threading.Thread(target=ZoneController.verify_schedule)
-    thead.start()
+    from app.services.ScheduleIrrigationService import ScheduleIrrigationService
+    ScheduleIrrigationService.verify_schedule()
     return app
 
 def register_extensions(app):
