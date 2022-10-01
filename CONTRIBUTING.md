@@ -34,6 +34,17 @@ Agora você pode modificar os arquivos existentes no projeto ou até criar novos
 
 :warning: Tome cuidado para alterar apenas o que foi proposto na _branch_. Não faça grandes alterações, pois quanto maior a quantidade de alterações, mais dificíl será revisar seu código.
 
+- Caso tenha adicionado uma nova importação execute no terminal os comandos:
+
+```bash
+pip pip install pipreqs
+```
+e
+```bash
+pipreqs
+```
+para atualizar o arquivo requirements.txt
+
 ---
 
 ## Registre as alterações

@@ -7,5 +7,5 @@ class ScheduleIrrigation(BaseModel):
     irrigation_zone_id: str
     liters_of_water: int
     days: list
-    time: int
-    moment_of_activation: float
+    time: str
+    duration: str
