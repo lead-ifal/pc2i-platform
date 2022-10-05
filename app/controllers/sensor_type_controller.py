@@ -62,8 +62,3 @@ class SensorTypeConstroller():
     except:  
 
       return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, ERROR_MESSAGE)
-
-    
-
-  def teste():
-    return '<h1>teste</h1>'
