@@ -41,7 +41,7 @@ pip pip install pipreqs
 ```
 e
 ```bash
-pipreqs
+pipreqs --force
 ```
 para atualizar o arquivo requirements.txt
 

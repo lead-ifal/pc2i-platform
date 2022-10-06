@@ -15,7 +15,7 @@ class ScheduleIrrigationService:
   def active_schedule(irrigation_zone_id):
     ZoneController.toggle_irrigation(irrigation_zone_id)
     return schedule.CancelJob
-  @worker
+
   def verify_schedule():
     day = datetime.today().weekday()
     schedule_list = scheduled_irrigations.find({})
@@ -23,10 +23,12 @@ class ScheduleIrrigationService:
       if day in irrigation_scheduled["days"]:
         activation_moment = datetime.strptime(irrigation_scheduled["time"], '%H:%M:%S').time()
         duration = datetime.strptime(irrigation_scheduled["duration"], '%H:%M:%S').time()
-        stop_moment = timedelta(hours=activation_moment.hour,minutes=activation_moment.minute,
-        seconds=activation_moment.second )+ timedelta(hours=duration.hour,minutes=duration.minute,
+        stop_moment = timedelta(hours=activation_moment.hour, minutes=activation_moment.minute,  seconds=activation_moment.second )+ timedelta(hours=duration.hour,minutes=duration.minute,
         seconds=duration.second)
-        schedule.every().day.at(str(activation_moment)).until(str(stop_moment)).do(ScheduleIrrigationService.active_schedule,irrigation_zone_id=irrigation_scheduled["irrigation_zone_id"])
+        schedule.every().day.at(str(activation_moment)).do(ScheduleIrrigationService.active_schedule,irrigation_zone_id=irrigation_scheduled["irrigation_zone_id"])
+        schedule.every().day.at(str(stop_moment)).do(ScheduleIrrigationService.active_schedule,irrigation_zone_id=irrigation_scheduled["irrigation_zone_id"])
+  @worker
+  def worker_schedule():
     schedule.every().day.at("00:00").do(ScheduleIrrigationService.verify_schedule)
     while True:
       schedule.run_pending()
