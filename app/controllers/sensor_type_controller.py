@@ -11,7 +11,7 @@ from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 sensor_types: Collection = database.db.sensor_types
 
 class SensorTypeConstroller():
-  #@has_token
+  @has_token
   def create():
      body = request.get_json()
      params = required_params['sensor_types']['create']
