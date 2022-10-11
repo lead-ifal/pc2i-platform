@@ -8,20 +8,19 @@ from app.models.sensor_type import SensorType
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE,HTTP_SERVER_ERROR_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 
-
 sensor_types: Collection = database.db.sensor_types
 
-
 class SensorTypeConstroller():
-  @has_token
+  #@has_token
   def create():
      body = request.get_json()
-     params = required_params['sensor_type']['create']
+     params = required_params['sensor_types']['create']
      includes_params = GlobalController.includes_all_required_params(params, body)
 
      try:
 
       if includes_params:
+        
         sensor_type = SensorType(**body)
         result = sensor_types.insert_one(sensor_type.dict(exclude_none=True))
         sensor_type_data = sensor_type.dict(exclude_none=True)
