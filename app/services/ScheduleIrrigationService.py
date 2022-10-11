@@ -10,7 +10,7 @@ scheduled_irrigations: Collection = database.db.scheduled_irrigations
 
 
 class ScheduleIrrigationService:
-  #@worker
+  @worker
   def verify_schedule():
     looping = True
     hour_to_seconds = 3600

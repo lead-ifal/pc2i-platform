@@ -1,15 +1,10 @@
 from typing import Collection
-
-
 from flask import request
 from app.controllers.global_controller import GlobalController
 from app.middlewares.has_token import has_token
-
 from app.extensions import database
-
 from app.constants.required_params import required_params
 from app.models.sensor_type import SensorType
-
 from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE,HTTP_SERVER_ERROR_CODE
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
 
