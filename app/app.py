@@ -22,6 +22,7 @@ def create_app(config_object):
     configure_logger(app)
     from app.services.ScheduleIrrigationService import ScheduleIrrigationService
     ScheduleIrrigationService.verify_schedule()
+    ScheduleIrrigationService.worker_schedule()
     return app
 
 def register_extensions(app):

@@ -5,7 +5,7 @@ required_params = {
   },
   'irrigation_zones': {
     'create': ['user_id', 'name', 'description', 'size', 'irrigation_type'],
-    'schedule': ['irrigation_zone_id', 'liters_of_water', 'time', 'days','moment_of_activation'],
+    'schedule': ['irrigation_zone_id', 'liters_of_water', 'time', 'days','duration'],
     'update': ['irrigation_zone_id', 'user_id', 'name', 'description', 'size', 'irrigation_type'],
     'update_schedule': ['schedule_id', 'irrigation_zone_id', 'liters_of_water', 'time', 'days','moment_of_activation']
   },
