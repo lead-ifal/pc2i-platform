@@ -38,10 +38,12 @@ def register_blueprints(app):
     from .routes.irrigation_zones import irrigation_zones_bp
     from .routes.cultures import cultures_bp
     from .routes.sensors import sensors_bp
+    from .routes.sensor_types import sensor_types_bp
     app.register_blueprint(users_bp, url_prefix='/users')
     app.register_blueprint(irrigation_zones_bp, url_prefix='/irrigation-zones')
     app.register_blueprint(cultures_bp, url_prefix='/cultures')
     app.register_blueprint(sensors_bp, url_prefix='/sensors')
+    app.register_blueprint(sensor_types_bp, url_prefix='/sensor-types')
     return None
 
 def configure_logger(app):

@@ -17,5 +17,8 @@ required_params = {
     'create': ['culture_id', 'name'],
     'read': ['culture_id']
   },
+  'sensor_types':{
+    'create' : ['type']
+  }
 
 }
