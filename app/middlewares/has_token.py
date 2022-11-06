@@ -1,3 +1,4 @@
+from bson import ObjectId
 from functools import wraps
 from flask import request
 from typing import Collection
@@ -18,7 +19,7 @@ def has_token(route_function):
 
     else:
       try:
-        count = users.count_documents({ 'token': token })
+        count = users.count_documents({ 'token': ObjectId(token) })
 
         if count == 0:
           raise Exception()

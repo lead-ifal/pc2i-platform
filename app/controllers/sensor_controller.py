@@ -1,4 +1,4 @@
-import json
+from bson import ObjectId
 from flask import request
 from typing import Collection
 from app.extensions import database, mqtt
@@ -22,7 +22,7 @@ class SensorController():
 
     try:
       if includes_params:
-
+        body['culture_id'] = ObjectId(body['culture_id'])
         sensor = Sensor(**body)
         result = sensors.insert_one(sensor.dict(exclude_none=True))
         sensor_data = sensor.dict(exclude_none=True)
@@ -42,7 +42,7 @@ class SensorController():
   def list(irrigation_zone_id):
 
     try:
-      sensors_zone_list = sensors.find({ 'irrigation_zone_id' : irrigation_zone_id})
+      sensors_zone_list = sensors.find({ 'irrigation_zone_id' : ObjectId(irrigation_zone_id)})
       data = []
       for sensor in sensors_zone_list: 
         data.append(sensor)
