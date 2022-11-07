@@ -9,7 +9,7 @@ from app.extensions import (
     mqtt
 )
 from flask import Flask
-
+import os
 
 def create_app(config_object):
     """Create application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -20,9 +20,10 @@ def create_app(config_object):
     register_extensions(app)
     register_blueprints(app)
     configure_logger(app)
-    from app.services.ScheduleIrrigationService import ScheduleIrrigationService
-    ScheduleIrrigationService.verify_schedule()
-    ScheduleIrrigationService.worker_schedule()
+    if os.getenv("DEV_MODE") != "True":
+        from app.services.ScheduleIrrigationService import ScheduleIrrigationService
+        ScheduleIrrigationService.verify_schedule()
+        ScheduleIrrigationService.worker_schedule()
     return app
 
 def register_extensions(app):
