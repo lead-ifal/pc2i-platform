@@ -12,7 +12,6 @@ from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, CULT
 from app.constants.required_params import required_params
 from typing import Collection
 
-
 cultures: Collection = database.db.cultures
 irrigation_zones: Collection = database.db.irrigation_zones
 
@@ -25,6 +24,7 @@ class CultureController:
 
     try:
       if includes_params:
+        body['irrigation_zone_id'] = ObjectId(body['irrigation_zone_id'])
         body['planting_date'] = datetime.fromisoformat(body['planting_date'])
         body['geographic_coordinates'] = {
           'type': 'Point',
@@ -35,9 +35,9 @@ class CultureController:
           body['harvest_date'] = datetime.fromisoformat(body['harvest_date'])
 
         culture = Culture(**body)
-        irrigation_zone_id = ObjectId(culture.irrigation_zone_id)
         culture_data = culture.dict(exclude_none=True)
-        irrigation_zone_exists = irrigation_zones.count({ '_id': irrigation_zone_id }) == 1
+        filter = { '_id': body['irrigation_zone_id'] }
+        irrigation_zone_exists = irrigation_zones.count(filter) == 1
 
         if irrigation_zone_exists:
           if 'image' in body:
@@ -116,15 +116,13 @@ class CultureController:
       return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
 
   def list(irrigation_zone_id):
-    culture_list = cultures.find({ 'irrigation_zone_id': irrigation_zone_id })
+    culture_list = cultures.find({ 'irrigation_zone_id': ObjectId(irrigation_zone_id) })
     data = []
 
     for culture in culture_list:
       data.append(culture)
 
     return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
-
-
 
   def show(culture_id):
     try:

@@ -34,16 +34,12 @@ Agora você pode modificar os arquivos existentes no projeto ou até criar novos
 
 :warning: Tome cuidado para alterar apenas o que foi proposto na _branch_. Não faça grandes alterações, pois quanto maior a quantidade de alterações, mais dificíl será revisar seu código.
 
-- Caso tenha adicionado uma nova importação execute no terminal os comandos:
+### Novas dependências
+Caso você tenha instalado uma nova biblioteca, execute o comando abaixo para registrá-la no arquivo `requirements.txt`:
 
 ```bash
-pip pip install pipreqs
+pip freeze > requirements.txt
 ```
-e
-```bash
-pipreqs --force
-```
-para atualizar o arquivo requirements.txt
 
 ---
 
