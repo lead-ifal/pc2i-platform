@@ -24,7 +24,7 @@ class UserController():
 
     encoded_password = password.encode('utf8')
     hash = bcrypt.hashpw(encoded_password, salt)
-    
+
     return hash
   
   def user_already_exists(email: str):
@@ -54,7 +54,6 @@ class UserController():
         
 
         except Exception:
-          print('pau')
           raise Exception()
         body['token'] = str(ObjectId())
         user = User(**body)
