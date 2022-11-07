@@ -1,3 +1,4 @@
+from bson import ObjectId
 from pydantic import BaseModel, Field
 from werkzeug.datastructures import FileStorage
 from typing import Optional
@@ -6,7 +7,7 @@ from app.models.objectid import PydanticObjectId
 
 class Culture(BaseModel):
   id: Optional[PydanticObjectId] = Field(alias="_id")
-  irrigation_zone_id: str
+  irrigation_zone_id: ObjectId
   name: str
   type: str
   planting_date: datetime
