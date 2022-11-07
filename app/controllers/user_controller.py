@@ -49,13 +49,8 @@ class UserController():
         if user_exists:
           raise Exception()
         
-        try:
-          body['password'] = UserController.encode_password(body['password'])
-        
-
-        except Exception:
-          raise Exception()
-        body['token'] = str(ObjectId())
+        body['password'] = UserController.encode_password(body['password'])
+        body['token'] = ObjectId()
         user = User(**body)
         result = users.insert_one(user.dict(exclude_none=True))
         user_data = user.dict(exclude_none=True, exclude={'password'})
