@@ -43,7 +43,7 @@ class UserController():
           raise Exception()
 
         body['password'] = UserController.encode_password(body['password'])
-        body['token'] = str(ObjectId())
+        body['token'] = ObjectId()
         user = User(**body)
         result = users.insert_one(user.dict(exclude_none=True))
         user_data = user.dict(exclude_none=True, exclude={'password'})
