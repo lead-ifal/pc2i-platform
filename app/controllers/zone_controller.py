@@ -19,7 +19,6 @@ irrigation_zones: Collection = database.db.irrigation_zones
 scheduled_irrigations: Collection = database.db.scheduled_irrigations
 mqtt: mqtt
 
-
 class ZoneController:
   irrigation_status = False
 
@@ -28,9 +27,11 @@ class ZoneController:
     body = request.get_json()
     params = required_params['irrigation_zones']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
-
     try:
-      if includes_params:
+      if includes_params or Config.DEV_MODE is True:
+        if Config.DEV_MODE is True:
+          body['user_id'] = 'dev'
+        
         irrigation_zone = IrrigationZone(**body)
         irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
 
@@ -143,7 +144,6 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
 
-
   @has_token
   def schedule_irrigation():
     body = request.get_json()
@@ -152,6 +152,7 @@ class ZoneController:
 
     try:
       if includes_params:
+        body['irrigation_zone_id'] = ObjectId(body['irrigation_zone_id'])
         scheduling = ScheduleIrrigation(**body)
         schedule_irrigation_data = scheduling.dict(exclude_none=True)
         scheduled_irrigations.insert_one(schedule_irrigation_data)
@@ -167,7 +168,6 @@ class ZoneController:
     except:
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
-
   def show(zone_id):
     try:
       irrigation_zone = None
@@ -182,7 +182,7 @@ class ZoneController:
 
 
   def list(user_id):
-    irrigation_zone_list = irrigation_zones.find({ 'user_id': user_id })
+    irrigation_zone_list = irrigation_zones.find({ 'user_id': ObjectId(user_id) })
     data = []
 
     for irrigation_zone in irrigation_zone_list:
@@ -194,18 +194,16 @@ class ZoneController:
     ZoneController.irrigation_status = not ZoneController.irrigation_status
     requests.get(Config.PC2I_ESP_ADDRESS+'/irrigation/'+str(ZoneController.irrigation_status))
 
-
-
   def schedule_irrigation_list(zone_id):
     try:
-      schedule_irrigation_zone_list = scheduled_irrigations.find({ 'irrigation_zone_id': zone_id })
+      filter = { 'irrigation_zone_id': ObjectId(zone_id) }
+      schedule_irrigation_zone_list = scheduled_irrigations.find(filter)
       data = []
 
-      for schedule in  schedule_irrigation_zone_list:
+      for schedule in schedule_irrigation_zone_list:
         data.append(schedule)
 
       return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
 
     except:
       return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
-
