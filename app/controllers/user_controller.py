@@ -15,10 +15,17 @@ users: Collection = database.db.users
 class UserController():
 
   def encode_password(password: str):
-    salt = bcrypt.gensalt()
-    encoded_password = password.encode('utf8')
+    try:
+      salt = bcrypt.gensalt()
 
-    return bcrypt.hashpw(encoded_password, salt)
+    except Exception as err:
+      print(err)
+      raise Exception()
+
+    encoded_password = password.encode('utf8')
+    hash = bcrypt.hashpw(encoded_password, salt)
+
+    return hash
   
   def user_already_exists(email: str):
     user_already_exists = True
@@ -41,7 +48,7 @@ class UserController():
 
         if user_exists:
           raise Exception()
-
+        
         body['password'] = UserController.encode_password(body['password'])
         body['token'] = ObjectId()
         user = User(**body)
