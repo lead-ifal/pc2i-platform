@@ -23,6 +23,7 @@ class UserController():
   def encode_password(password: str):
     try:
       salt = bcrypt.gensalt()
+
     except Exception as err:
       print(err)
       raise Exception()
@@ -53,7 +54,7 @@ class UserController():
 
         if user_exists:
           raise Exception()
-
+        
         body['password'] = UserController.encode_password(body['password'])
         body['token'] = ObjectId()
         body['encrypted_email'] = md5(body["email"].encode('utf-8')).hexdigest()
