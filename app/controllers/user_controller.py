@@ -21,10 +21,16 @@ users: Collection = database.db.users
 class UserController():
 
   def encode_password(password: str):
-    salt = bcrypt.gensalt()
-    encoded_password = password.encode('utf8')
+    try:
+      salt = bcrypt.gensalt()
+    except Exception as err:
+      print(err)
+      raise Exception()
 
-    return bcrypt.hashpw(encoded_password, salt)
+    encoded_password = password.encode('utf8')
+    hash = bcrypt.hashpw(encoded_password, salt)
+
+    return hash
 
   def user_already_exists(email: str):
     user_already_exists = True
