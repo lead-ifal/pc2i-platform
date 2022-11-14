@@ -9,5 +9,5 @@ class Config:
   DEBUG = DEV_MODE
   MONGO_URI = os.getenv('MONGO_URI')
   MQTT_BROKER_URL = os.getenv('BROKER_URL')
-  MQTT_BROKER_PORT = 80
+  MQTT_BROKER_PORT = int(os.getenv('MQTT_BROKER_PORT'))
   PC2I_ESP_ADDRESS = os.getenv('PC2I_ESP_ADDRESS')

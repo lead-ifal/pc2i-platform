@@ -20,7 +20,7 @@ def create_app(config_object):
     register_extensions(app)
     register_blueprints(app)
     configure_logger(app)
-    from app.services.ScheduleIrrigationService import ScheduleIrrigationService
+    from app.services.schedule_irrigation_service import ScheduleIrrigationService
     ScheduleIrrigationService.verify_schedule()
     ScheduleIrrigationService.worker_schedule()
     return app
