@@ -13,7 +13,7 @@ from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, 
 from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE, ZONE_NOT_FOUND_MESSAGE, \
   INTERNAL_SERVER_ERROR_MESSAGE
 from app.constants.required_params import required_params
-
+from app.constants.irrigation_types import irrigation_types
 cultures: Collection = database.db.cultures
 irrigation_zones: Collection = database.db.irrigation_zones
 scheduled_irrigations: Collection = database.db.scheduled_irrigations
@@ -207,3 +207,10 @@ class ZoneController:
 
     except:
       return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
+
+  def irrigation_types_list():
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_types)
+
+  def irrigation_types_show(type_id):
+    irrigation_type=irrigation_types[int(type_id)]
+    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_type)
