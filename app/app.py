@@ -16,10 +16,9 @@ def create_app(config_object):
     register_extensions(app)
     register_blueprints(app)
     configure_logger(app)
-    from app.services.schedule_irrigation_service import ScheduleIrrigationService
-
-    ScheduleIrrigationService.verify_schedule()
-    ScheduleIrrigationService.worker_schedule()
+    #from app.services.schedule_irrigation_service import ScheduleIrrigationService
+    #ScheduleIrrigationService.verify_schedule()
+    #ScheduleIrrigationService.worker_schedule()
     return app
 
 
@@ -71,4 +70,8 @@ def handle_mqtt_message(client, userdata, message):
 @mqtt.on_log()
 def handle_logging(client, userdata, level, buf):
     if level == MQTT_LOG_ERR:
+<<<<<<< HEAD
         print("Error: {}".format(buf))
+=======
+        print('Error: {}'.format(buf))
+>>>>>>> 7aeff3d (temp: desativacao da verificacao de irrigacao)
