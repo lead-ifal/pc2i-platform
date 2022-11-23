@@ -1,7 +1,8 @@
 required_params = {
   'users': {
     'create': ['name', 'email', 'password'],
-    'read': ['email', 'password']
+    'read': ['email', 'password'],
+    'update': ['name', 'email', 'password']
   },
   'irrigation_zones': {
     'create': ['user_id', 'name', 'description', 'size', 'irrigation_type'],
