@@ -28,10 +28,8 @@ class ZoneController:
     params = required_params['irrigation_zones']['create']
     includes_params = GlobalController.includes_all_required_params(params, body)
     try:
-      if includes_params or Config.DEV_MODE is True:
-        if Config.DEV_MODE is True:
-          body['user_id'] = 'dev'
-        
+      if includes_params:
+        body['user_id'] =  ObjectId(body['user_id'])
         irrigation_zone = IrrigationZone(**body)
         irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
 

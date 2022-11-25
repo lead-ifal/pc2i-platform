@@ -20,6 +20,10 @@ users: Collection = database.db.users
 
 class UserController():
 
+  def encode_email(email: str):
+    hash = md5(email.encode('utf-8')).hexdigest()
+    return hash
+
   def encode_password(password: str):
     try:
       salt = bcrypt.gensalt()
@@ -57,7 +61,7 @@ class UserController():
         
         body['password'] = UserController.encode_password(body['password'])
         body['token'] = ObjectId()
-        body['encrypted_email'] = md5(body["email"].encode('utf-8')).hexdigest()
+        body['encrypted_email'] = UserController.encode_email(body['email'])
         body['validation'] = False
         user = User(**body)
         result = users.insert_one(user.dict(exclude_none=True))

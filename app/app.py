@@ -1,6 +1,10 @@
 """The app module, containing the app factory function."""
+from datetime import datetime
+import json
 import logging
 import sys
+import os
+from bson import ObjectId
 
 
 from app.extensions import (
@@ -20,6 +24,7 @@ def create_app(config_object):
     register_extensions(app)
     register_blueprints(app)
     configure_logger(app)
+    create_dev_mode_user()
     from app.services.schedule_irrigation_service import ScheduleIrrigationService
     ScheduleIrrigationService.verify_schedule()
     ScheduleIrrigationService.worker_schedule()
@@ -31,6 +36,18 @@ def register_extensions(app):
     cors.init_app(app)
     mqtt.init_app(app)
     return None
+
+def create_dev_mode_user():
+    from app.controllers.user_controller import users
+    from app.constants.dev_mode_user import dev_mode_user
+    dev_mode_user_already_created = users.find_one({'email':dev_mode_user["email"] })
+    if dev_mode_user_already_created is None:
+        users.insert_one(dev_mode_user)
+        dev_mode_user['password'] = (os.getenv('DEV_MODE_USER_PASSWORD'))
+        print(json.dumps(dev_mode_user, indent=4, sort_keys=True, ensure_ascii=False, default=str))
+
+        
+
 
 def register_blueprints(app):
     """Register Flask blueprints."""
