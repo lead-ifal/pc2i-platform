@@ -1,30 +1,31 @@
 from flask import Response
 from app.models.json_encoder import JSONEncoder
 
+
 class GlobalController:
-  def includes_all_required_params(params, body):
-    includes_params = True
+    def includes_all_required_params(params, body):
+        includes_params = True
 
-    for param in params:
-      if (param not in body):
-        includes_params = False
+        for param in params:
+            if param not in body:
+                includes_params = False
 
-    return includes_params
+        return includes_params
 
-  def generate_response(status, message, data=None):
-    response = {}
-    response['message'] = message
+    def generate_response(status, message, data=None):
+        response = {}
+        response["message"] = message
 
-    if data is not None:
-      response['data'] = data
+        if data is not None:
+            response["data"] = data
 
-    return Response(
-      response = JSONEncoder().encode(response),
-      status = status,
-      mimetype = 'application/json'
-    )
+        return Response(
+            response=JSONEncoder().encode(response),
+            status=status,
+            mimetype="application/json",
+        )
 
-  def is_valid_mongodb_id(id):
-    MONGODB_ID_LENGTH = 24
+    def is_valid_mongodb_id(id):
+        MONGODB_ID_LENGTH = 24
 
-    return len(id) == MONGODB_ID_LENGTH
+        return len(id) == MONGODB_ID_LENGTH
