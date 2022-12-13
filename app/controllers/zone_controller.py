@@ -182,13 +182,16 @@ class ZoneController:
 
 
   def list(user_id):
-    irrigation_zone_list = irrigation_zones.find({ 'user_id': ObjectId(user_id) })
-    data = []
+    try:
+      irrigation_zone_list = irrigation_zones.find({ 'user_id': ObjectId(user_id) })
+      data = []
 
-    for irrigation_zone in irrigation_zone_list:
-      data.append(irrigation_zone)
+      for irrigation_zone in irrigation_zone_list:
+        data.append(irrigation_zone)
 
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+      return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)  
 
   def toggle_irrigation(zone_id=None):
     ZoneController.irrigation_status = not ZoneController.irrigation_status
