@@ -6,8 +6,8 @@ from app.extensions import database
 from app.middlewares.has_token import has_token
 from app.models.user import User
 from app.controllers.global_controller import GlobalController
-from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SUCCESS_CODE
-from app.constants.response_messages import ERROR_MESSAGE, SUCCESS_MESSAGE
+from app.constants.status_code import HTTP_BAD_REQUEST_CODE, HTTP_CREATED_CODE, HTTP_SERVER_ERROR_CODE, HTTP_SUCCESS_CODE
+from app.constants.response_messages import ERROR_MESSAGE, INTERNAL_SERVER_ERROR_MESSAGE, SUCCESS_MESSAGE
 from app.constants.required_params import required_params
 import schedule
 from datetime import datetime,timedelta
@@ -38,15 +38,17 @@ class UserController():
     return hash
 
   def user_already_exists(email: str):
-    user_already_exists = True
+    try:
+      user_already_exists = True
 
-    saved_user = users.find_one({ 'email': email })
+      saved_user = users.find_one({ 'email': email })
 
-    if saved_user is None:
-      user_already_exists = False
+      if saved_user is None:
+        user_already_exists = False
 
-    return { 'exists': user_already_exists, 'data': saved_user }
-
+      return { 'exists': user_already_exists, 'data': saved_user }
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE) 
   def create():
     body = request.get_json()
     params = required_params['users']['create']
@@ -85,30 +87,41 @@ class UserController():
       return GlobalController.generate_response(HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE)
 
   def verify_validation(encrypted_email,deadline):
-    if datetime.today()>=deadline:
-      user=users.find_one({"encrypted_email":encrypted_email})
-      if user["validation"]==False:
-        users.delete_one(user)
-      return schedule.CancelJob
+    try:
+      if datetime.today()>=deadline:
+        user=users.find_one({"encrypted_email":encrypted_email})
+        if user["validation"]==False:
+          users.delete_one(user)
+        return schedule.CancelJob
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
 
   def user_validation(encrypted_email):
-    users.find_one_and_update({"encrypted_email": encrypted_email},{"$set":{"validation":True,"validation_date":datetime.utcnow()}})
-    return GlobalController.generate_response(
-      HTTP_SUCCESS_CODE, SUCCESS_MESSAGE
-          )
+    try:
+      users.find_one_and_update({"encrypted_email": encrypted_email},{"$set":{"validation":True,"validation_date":datetime.utcnow()}})
+      return GlobalController.generate_response(
+        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE
+            )
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
+
 
 
 
   @has_token
   def list():
-    users_list = users.find({}, {"password":0 })
-    data = []
+    try:
+      users_list = users.find({}, {"password":0 })
+      data = []
 
-    for user in users_list:
+      for user in users_list:
 
-      data.append(user)
+        data.append(user)
 
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+      return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+      
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
 
 
   def login():

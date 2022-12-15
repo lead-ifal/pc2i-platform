@@ -116,14 +116,16 @@ class CultureController:
       return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
 
   def list(irrigation_zone_id):
-    culture_list = cultures.find({ 'irrigation_zone_id': ObjectId(irrigation_zone_id) })
-    data = []
+    try:
+      culture_list = cultures.find({ 'irrigation_zone_id': ObjectId(irrigation_zone_id) })
+      data = []
 
-    for culture in culture_list:
-      data.append(culture)
+      for culture in culture_list:
+        data.append(culture)
 
-    return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
-
+      return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data)
+    except:
+      return GlobalController.generate_response(HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE)
   def show(culture_id):
     try:
       data = None
