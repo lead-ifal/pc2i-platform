@@ -5,7 +5,7 @@ from flask_pymongo import PyMongo
 from flask_cors import CORS
 from flask_mqtt import Mqtt
 
-#bcrypt = Bcrypt()
+# bcrypt = Bcrypt()
 # csrf_protect = CSRFProtect()
 database = PyMongo()
 cors = CORS()
