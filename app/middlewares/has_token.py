@@ -7,7 +7,6 @@ from app.controllers.global_controller import GlobalController
 from app.extensions import database
 from app.constants.status_code import HTTP_UNAUTHORIZED_CODE
 from app.constants.response_messages import UNAUTHORIZED_MESSAGE
-
 users: Collection = database.db.users
 
 
@@ -20,15 +19,17 @@ def has_token(route_function):
                 HTTP_UNAUTHORIZED_CODE, UNAUTHORIZED_MESSAGE
             )
 
-        elif token is not None or Config.DEV_MODE is True:
+        else:
             try:
-                if token is None:
-                    count = users.count_documents({"token": "dev"})
+                if token is None and Config.DEV_MODE is True:
+                    from app.constants.dev_mode_user import dev_mode_user
+                    dev_mode_user = users.find_one({ 'email':dev_mode_user["email"] })
+                    token = dev_mode_user["token"]
                 else:
-                    count = users.count_documents({"token": ObjectId(token)})
-
-                if count == 0:
-                    raise Exception()
+                    count = users.count_documents({ 'token': ObjectId(token) })
+                    if count == 0:
+                        raise Exception()
+        
 
                 return route_function(*args, **kwargs)
 
