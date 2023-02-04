@@ -22,7 +22,7 @@ from app.constants.response_messages import (
     INTERNAL_SERVER_ERROR_MESSAGE,
 )
 from app.constants.required_params import required_params
-from app.constants.irrigation_types import irrigation_types
+
 cultures: Collection = database.db.cultures
 irrigation_zones: Collection = database.db.irrigation_zones
 scheduled_irrigations: Collection = database.db.scheduled_irrigations
@@ -38,10 +38,8 @@ class ZoneController:
         params = required_params["irrigation_zones"]["create"]
         includes_params = GlobalController.includes_all_required_params(params, body)
         try:
-            if includes_params or Config.DEV_MODE is True:
-                if Config.DEV_MODE is True:
-                    body["user_id"] = "dev"
-
+             if includes_params:
+                body['user_id'] =  ObjectId(body['user_id'])
                 irrigation_zone = IrrigationZone(**body)
                 irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
 
@@ -51,7 +49,7 @@ class ZoneController:
                     HTTP_CREATED_CODE, SUCCESS_MESSAGE, irrigation_zone_data
                 )
 
-            raise Exception()
+                raise Exception()
 
         except:
             return GlobalController.generate_response(
@@ -252,9 +250,4 @@ class ZoneController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
   
-    def irrigation_types_list():
-        return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_types)
-
-    def irrigation_types_show(type_id):
-        irrigation_type=irrigation_types[int(type_id)]
-        return GlobalController.generate_response(HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_type)
+    
