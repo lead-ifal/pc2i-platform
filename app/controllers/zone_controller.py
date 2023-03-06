@@ -38,8 +38,8 @@ class ZoneController:
         params = required_params["irrigation_zones"]["create"]
         includes_params = GlobalController.includes_all_required_params(params, body)
         try:
-             if includes_params:
-                body['user_id'] =  ObjectId(body['user_id'])
+            if includes_params:
+                body["user_id"] = ObjectId(body["user_id"])
                 irrigation_zone = IrrigationZone(**body)
                 irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
 
@@ -88,6 +88,56 @@ class ZoneController:
 
     @has_token
     def update():
+        """
+        Update an irrigation zone
+        ---
+        tags:
+          - Irrigation Zones
+        parameters:
+          - name: token
+            in: header
+            description: Authentication key
+          - name: data
+            description: Updated irrigation zone
+            in: body
+            schema:
+              id: Irrigation Zone
+              properties:
+                irrigation_zone_id:
+                  required: true
+                  description: MongoDB ObjectID for irrigation zone
+                  type: string
+                user_id:
+                  required: true
+                  description: MongoDB ObjectID for user
+                  type: string
+                name:
+                  required: true
+                  description: Irrigation zone name
+                  type: string
+                description:
+                  required: true
+                  description: Irrigation zone description
+                  type: string
+                size:
+                  required: true
+                  description: Irrigation zone size
+                  type: number
+                  format: float
+                irrigation_type:
+                  required: true
+                  description: Irrigation type
+                  type: number
+        responses:
+          200:
+            description: Success
+          400:
+            description: Invalid data
+          401:
+            description: Unauthorized
+          500:
+            description: Internal server error
+        """
         body = request.get_json()
         params = required_params["irrigation_zones"]["update"]
         includes_params = GlobalController.includes_all_required_params(params, body)

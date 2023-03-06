@@ -90,6 +90,11 @@ class UserController:
                         body["encrypted_email"], deadline
                     )
                 )
+                return GlobalController.generate_response(
+                    HTTP_CREATED_CODE,
+                    SUCCESS_MESSAGE,
+                    user_data
+                )
 
             raise Exception()
 

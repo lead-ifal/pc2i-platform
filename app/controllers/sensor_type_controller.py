@@ -46,13 +46,10 @@ class SensorTypeConstroller:
 
         try:
 
-            sensor_types_list = sensor_types.find({})
-            data = []
-            for sensor_type in sensor_types_list:
-                data.append(sensor_type)
+            sensor_types_list = list(sensor_types.find({}))
 
             return GlobalController.generate_response(
-                HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data
+                HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, sensor_types_list
             )
 
         except:
