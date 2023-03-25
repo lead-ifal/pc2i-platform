@@ -53,11 +53,14 @@ def register_blueprints(app):
     from .routes.irrigation_zones import irrigation_zones_bp
     from .routes.cultures import cultures_bp
     from .routes.sensors import sensors_bp
+    from .routes.swagger import swagger_bp
 
     app.register_blueprint(users_bp, url_prefix="/users")
     app.register_blueprint(irrigation_zones_bp, url_prefix="/irrigation-zones")
     app.register_blueprint(cultures_bp, url_prefix="/cultures")
     app.register_blueprint(sensors_bp, url_prefix="/sensors")
+    app.register_blueprint(swagger_bp)
+
     return None
 
 
