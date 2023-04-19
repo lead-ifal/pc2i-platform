@@ -57,7 +57,7 @@ def register_blueprints(app):
     from .routes.sensors import sensors_bp
     from .routes.swagger import swagger_bp
     from .routes.sensor_types import sensor_types_bp
-
+    
     app.register_blueprint(users_bp, url_prefix="/users")
     app.register_blueprint(irrigation_zones_bp, url_prefix="/irrigation-zones")
     app.register_blueprint(cultures_bp, url_prefix="/cultures")
