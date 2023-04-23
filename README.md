@@ -7,7 +7,7 @@ Repositório de código da plataforma e API para gerenciamento de irrigação pr
 - [Python](https://python.org/downloads)
 
 ## :fire: Como contribuir
-Para contribuir com código ou sugestões de melhorias/correções na plataforma do projeto PC2I, acesse o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md).
+Para contribuir com código ou sugestões de melhorias/correções na plataforma do projeto PC2I, acesse o arquivo [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
 
 Caso possua alguma dúvida ou curiosidade sobre trabalho colaborativo com Git e GitHub, entre em contato com um dos membros do repositório.
 
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ```
 
 ### 6. Crie o arquivo de variáveis de ambiente
-Acesse o arquivo [MONGO_CONFIG.md](./MONGO_CONFIG.md) e obtenha a URL do banco de dados.
+Acesse o arquivo [MONGO_CONFIG.md](./docs/MONGO_CONFIG.md) e obtenha a URL do banco de dados.
 
 Com a URL do banco, crie uma cópia do arquivo [`.env.example`](./.env.example) com o nome de `.env`.
 
