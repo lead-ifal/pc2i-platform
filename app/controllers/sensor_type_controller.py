@@ -19,6 +19,34 @@ sensor_types: Collection = database.db.sensor_types
 class SensorTypeConstroller:
     @has_token
     def create():
+        """
+        Registration of sensor types
+        ---
+        tags:
+          - Sensor Types
+        parameters:
+          - name: token
+            in: header
+            description: Authentication key
+          - name: data
+            description: Registered sensor type
+            in: body
+            schema:
+              properties:
+                type:
+                  required: true
+                  description: Sensor type
+                  type: string
+        responses:
+          201:
+            description: Successfully Created
+          400:
+            description: Invalid data
+          401:
+            description: Unauthorized
+          500:
+            description: Internal server error
+        """
         body = request.get_json()
         params = required_params["sensor_types"]["create"]
         includes_params = GlobalController.includes_all_required_params(params, body)
@@ -35,15 +63,44 @@ class SensorTypeConstroller:
                     HTTP_CREATED_CODE, SUCCESS_MESSAGE, sensor_type_data
                 )
 
-            raise Exception()
+            else:
+                return GlobalController.generate_response(
+                    HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
+                )
 
         except:
             return GlobalController.generate_response(
-                HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
+                HTTP_SERVER_ERROR_CODE, ERROR_MESSAGE
             )
 
     def list():
-
+        """
+        List of sensor types
+        ---
+        tags:
+          - Sensor Types
+        responses:
+          200:
+            description: Success
+            schema:
+              properties:
+                message:
+                  type: string
+                data:
+                  type: array
+                  items:
+                    schema:
+                      id: Sensor Type
+                      properties:
+                        _id:
+                          description: MongoDB ObjectID for sensor type
+                          type: string
+                        type:
+                          description: Sensor type
+                          type: string
+          500:
+            description: Internal server error
+        """
         try:
 
             sensor_types_list = list(sensor_types.find({}))
