@@ -1,6 +1,10 @@
 # PC2I - Platform
 Repositório de código da plataforma e API para gerenciamento de irrigação promovido pelo projeto PC2I.
 
+#### :pushpin: Por enquanto, acessível apenas em _localhost_
+
+---
+
 ## :warning: Pré-Requisitos
 > Antes de começar, verifique se as seguintes ferramentas estão instaladas em sua máquina
 - [Git](https://git-scm.com/downloads)
@@ -84,4 +88,4 @@ No terminal, aparecerá algo assim:
 A plataforma estará executando na URL informada (por exemplo, `http://192.168.1.110:1026/`)
 
 ## :fire: Teste da plataforma/API
-Instale um cliente HTTP, como o [Postman](https://postman.com/downloads/), e obtenha as rotas da API acessando [esta documentação](https://documenter.getpostman.com/view/21952024/UzQypiBw).
+Acesse a rota `/api/docs` no navegador para ter acesso via [Swagger](https://swagger.io/tools/swagger-ui/) ou instale um cliente HTTP, como o [Postman](https://postman.com/downloads/), e obtenha as rotas da API acessando [esta documentação](https://documenter.getpostman.com/view/21952024/UzQypiBw).
