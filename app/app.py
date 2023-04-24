@@ -35,13 +35,15 @@ def register_extensions(app):
     mqtt.init_app(app)
     return None
 
+
 def create_dev_mode_user():
     from app.controllers.user_controller import users
     from app.constants.dev_mode_user import dev_mode_user
-    dev_mode_user_already_created = users.find_one({'email':dev_mode_user["email"] })
+
+    dev_mode_user_already_created = users.find_one({"email": dev_mode_user["email"]})
     if dev_mode_user_already_created is None:
         users.insert_one(dev_mode_user)
-        dev_mode_user['password'] = (os.getenv('DEV_MODE_USER_PASSWORD'))
+        dev_mode_user["password"] = os.getenv("DEV_MODE_USER_PASSWORD")
         print(json.dumps(dev_mode_user, indent=4, sort_keys=True, ensure_ascii=False, default=str))
 
 
@@ -54,12 +56,14 @@ def register_blueprints(app):
     from .routes.cultures import cultures_bp
     from .routes.sensors import sensors_bp
     from .routes.swagger import swagger_bp
-
+    from .routes.sensor_types import sensor_types_bp
+    
     app.register_blueprint(users_bp, url_prefix="/users")
     app.register_blueprint(irrigation_zones_bp, url_prefix="/irrigation-zones")
     app.register_blueprint(cultures_bp, url_prefix="/cultures")
     app.register_blueprint(sensors_bp, url_prefix="/sensors")
     app.register_blueprint(swagger_bp)
+    app.register_blueprint(sensor_types_bp, url_prefix="/sensor-types")
 
     return None
 
