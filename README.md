@@ -1,13 +1,17 @@
 # PC2I - Platform
 Repositório de código da plataforma e API para gerenciamento de irrigação promovido pelo projeto PC2I.
 
+#### :pushpin: Por enquanto, acessível apenas em _localhost_
+
+---
+
 ## :warning: Pré-Requisitos
 > Antes de começar, verifique se as seguintes ferramentas estão instaladas em sua máquina
 - [Git](https://git-scm.com/downloads)
 - [Python](https://python.org/downloads)
 
 ## :fire: Como contribuir
-Para contribuir com código ou sugestões de melhorias/correções na plataforma do projeto PC2I, acesse o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md).
+Para contribuir com código ou sugestões de melhorias/correções na plataforma do projeto PC2I, acesse o arquivo [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
 
 Caso possua alguma dúvida ou curiosidade sobre trabalho colaborativo com Git e GitHub, entre em contato com um dos membros do repositório.
 
@@ -53,7 +57,7 @@ pip install -r requirements.txt
 ```
 
 ### 6. Crie o arquivo de variáveis de ambiente
-Acesse o arquivo [MONGO_CONFIG.md](./MONGO_CONFIG.md) e obtenha a URL do banco de dados.
+Acesse o arquivo [MONGO_CONFIG.md](./docs/MONGO_CONFIG.md) e obtenha a URL do banco de dados.
 
 Com a URL do banco, crie uma cópia do arquivo [`.env.example`](./.env.example) com o nome de `.env`.
 
@@ -84,4 +88,4 @@ No terminal, aparecerá algo assim:
 A plataforma estará executando na URL informada (por exemplo, `http://192.168.1.110:1026/`)
 
 ## :fire: Teste da plataforma/API
-Instale um cliente HTTP, como o [Postman](https://postman.com/downloads/), e obtenha as rotas da API acessando [esta documentação](https://documenter.getpostman.com/view/21952024/UzQypiBw).
+Acesse a rota `/api/docs` no navegador para ter acesso via [Swagger](https://swagger.io/tools/swagger-ui/) ou instale um cliente HTTP, como o [Postman](https://postman.com/downloads/), e obtenha as rotas da API acessando [esta documentação](https://documenter.getpostman.com/view/21952024/UzQypiBw).

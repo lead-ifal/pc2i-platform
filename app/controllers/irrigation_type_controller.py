@@ -4,7 +4,7 @@ from app.constants.response_messages import SUCCESS_MESSAGE
 from app.constants.irrigation_types import irrigation_types
 
 
-class TypeController:
+class IrrigationTypeController:
     def irrigation_types_list():
         return GlobalController.generate_response(
             HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_types
