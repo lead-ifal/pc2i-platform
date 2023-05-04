@@ -1,8 +1,11 @@
 {
-  "recommendations": [
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "mikestead.dotenv",
-    "cstrap.flask-snippets"
-  ]
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "mikestead.dotenv",
+        "cstrap.flask-snippets",
+        "rangav.vscode-thunder-client",
+        "editorconfig.editorconfig",
+        "kevinrose.vsc-python-indent"
+    ]
 }
