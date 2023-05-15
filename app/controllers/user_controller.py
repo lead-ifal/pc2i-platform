@@ -29,9 +29,9 @@ users: Collection = database.db.users
 
 class UserController:
     def encode_email(email: str):
-        hash = md5(email.encode('utf-8')).hexdigest()
+        hash = md5(email.encode("utf-8")).hexdigest()
         return hash
-        
+
     def encode_password(password: str):
         try:
             salt = bcrypt.gensalt()
@@ -76,7 +76,7 @@ class UserController:
 
                 body["password"] = UserController.encode_password(body["password"])
                 body["token"] = ObjectId()
-                body['encrypted_email'] = UserController.encode_email(body['email'])
+                body["encrypted_email"] = UserController.encode_email(body["email"])
                 body["validation"] = False
                 user = User(**body)
                 result = users.insert_one(user.dict(exclude_none=True))
@@ -91,9 +91,7 @@ class UserController:
                     )
                 )
                 return GlobalController.generate_response(
-                    HTTP_CREATED_CODE,
-                    SUCCESS_MESSAGE,
-                    user_data
+                    HTTP_CREATED_CODE, SUCCESS_MESSAGE, user_data
                 )
 
             raise Exception()
@@ -232,3 +230,64 @@ class UserController:
             return GlobalController.generate_response(
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
+
+    @has_token
+    def update(user_id):
+        body = request.get_json()
+        params = required_params["users"]["update"]
+        includes_params = GlobalController.includes_all_required_params(params, body)
+
+        try:
+            if includes_params:
+                if GlobalController.is_valid_mongodb_id(user_id):
+
+                    user = User(**users.find_one({"_id": ObjectId(user_id)}))
+
+                    if UserController.verify_prefilled_fields(body):
+
+                        password_is_correct = bcrypt.checkpw(
+                            body["password"].encode(), user.password
+                        )
+
+                        user_data = body
+                        if password_is_correct:
+
+                            user_data["password"] = UserController.encode_password(
+                                user_data["new_password"]
+                            )
+                            user_data["encrypted_email"] = UserController.encode_email(
+                                user_data["email"]
+                            )
+
+                            user_data.pop("new_password")
+
+                            users.find_one_and_update(
+                                {"_id": ObjectId(user_id)}, {"$set": user_data}
+                            )
+                            user = users.find_one({"_id": ObjectId(user_id)})
+                            user_data = User(**user)
+                            user_data = user_data.dict(
+                                exclude_none=True, exclude={"password"}
+                            )
+
+                            return GlobalController.generate_response(
+                                HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, user_data
+                            )
+
+                else:
+                    return GlobalController.generate_response(
+                        HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
+                    )
+
+            raise Exception()
+
+        except:
+            return GlobalController.generate_response(
+                HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
+            )
+
+    def verify_prefilled_fields(body):
+        for field, value in body.items():
+            if value is None or value == "":
+                return False
+        return True
