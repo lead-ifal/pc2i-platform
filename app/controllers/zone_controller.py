@@ -24,6 +24,7 @@ from app.constants.required_params import required_params
 
 cultures: Collection = database.db.cultures
 irrigation_zones: Collection = database.db.irrigation_zones
+scheduled_irrigations: Collection = database.db.scheduled_irrigations
 mqtt: mqtt
 
 
@@ -55,28 +56,23 @@ class ZoneController:
             )
 
     @has_token
-    def delete():
-        body = request.get_json()
-        params = ["irrigation_zone_id"]
-        includes_params = GlobalController.includes_all_required_params(params, body)
+    def delete(irrigation_zone_id):
         try:
-            if includes_params:
-                irrigation_zone_id = body["irrigation_zone_id"]
-                if GlobalController.is_valid_mongodb_id(irrigation_zone_id):
-                    irrigation_zones.find_one_and_delete(
-                        {"_id": ObjectId(irrigation_zone_id)}
-                    )
-                    cultures.delete_many({"irrigation_zone_id": irrigation_zone_id})
-                    scheduled_irrigations.delete_many(
-                        {"irrigation_zone_id": irrigation_zone_id}
-                    )
-                    return GlobalController.generate_response(
-                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone_id
-                    )
-                else:
-                    return GlobalController.generate_response(
-                        HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
-                    )
+            if GlobalController.is_valid_mongodb_id(irrigation_zone_id):
+                irrigation_zones.find_one_and_delete(
+                    {"_id": ObjectId(irrigation_zone_id)}
+                )
+                cultures.delete_many({"irrigation_zone_id": irrigation_zone_id})
+                scheduled_irrigations.delete_many(
+                    {"irrigation_zone_id": irrigation_zone_id}
+                )
+                return GlobalController.generate_response(
+                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone_id
+                )
+            else:
+                return GlobalController.generate_response(
+                    HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
+                )
 
             raise Exception()
         except:
@@ -85,7 +81,7 @@ class ZoneController:
             )
 
     @has_token
-    def update():
+    def update(irrigation_zone_id):
         """
         Update an irrigation zone
         ---
@@ -137,21 +133,20 @@ class ZoneController:
             description: Internal server error
         """
         body = request.get_json()
-        params = required_params["irrigation_zones"]["update"]
+        params = required_params["irrigation_zones"]["create"]
         includes_params = GlobalController.includes_all_required_params(params, body)
         try:
             if includes_params:
-                irrigation_zones_id = body["irrigation_zone_id"]
-                if GlobalController.is_valid_mongodb_id(irrigation_zones_id):
-                    body.pop("irrigation_zone_id")
+                if GlobalController.is_valid_mongodb_id(irrigation_zone_id):
+                    body["user_id"] = ObjectId(body["user_id"])
                     irrigation_zone = IrrigationZone(**body)
                     irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
                     irrigation_zones.find_one_and_update(
-                        {"_id": ObjectId(irrigation_zones_id)},
+                        {"_id": ObjectId(irrigation_zone_id)},
                         {"$set": irrigation_zone_data},
                     )
                     return GlobalController.generate_response(
-                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zones_id
+                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone_id
                     )
                 else:
                     return GlobalController.generate_response(
@@ -164,7 +159,6 @@ class ZoneController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
-    
     def show(zone_id):
         try:
             irrigation_zone = None
@@ -201,5 +195,3 @@ class ZoneController:
             + "/irrigation/"
             + str(ZoneController.irrigation_status)
         )
-
-    
