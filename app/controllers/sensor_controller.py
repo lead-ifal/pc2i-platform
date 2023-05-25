@@ -2,6 +2,7 @@ from bson import ObjectId
 from flask import request
 from typing import Collection
 from app.extensions import database, mqtt
+from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.middlewares.has_token import has_token
 from app.models.sensor import Sensor
 from app.controllers.global_controller import GlobalController
@@ -52,6 +53,7 @@ class SensorController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     def list(irrigation_zone_id):
 
         try:

@@ -3,6 +3,7 @@ from flask import request
 from typing import Collection
 from bson import ObjectId
 from app.extensions import database
+from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.middlewares.has_token import has_token
 from app.models.user import User
 from app.controllers.global_controller import GlobalController
@@ -231,6 +232,7 @@ class UserController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     @has_token
     def update(user_id):
         body = request.get_json()
@@ -239,40 +241,39 @@ class UserController:
 
         try:
             if includes_params:
-                if GlobalController.is_valid_mongodb_id(user_id):
 
-                    user = User(**users.find_one({"_id": ObjectId(user_id)}))
+                user = User(**users.find_one({"_id": ObjectId(user_id)}))
 
-                    if UserController.verify_prefilled_fields(body):
+                if UserController.verify_prefilled_fields(body):
 
-                        password_is_correct = bcrypt.checkpw(
-                            body["password"].encode(), user.password
+                    password_is_correct = bcrypt.checkpw(
+                        body["password"].encode(), user.password
+                    )
+
+                    user_data = body
+                    if password_is_correct:
+
+                        user_data["password"] = UserController.encode_password(
+                            user_data["new_password"]
+                        )
+                        user_data["encrypted_email"] = UserController.encode_email(
+                            user_data["email"]
                         )
 
-                        user_data = body
-                        if password_is_correct:
+                        user_data.pop("new_password")
 
-                            user_data["password"] = UserController.encode_password(
-                                user_data["new_password"]
-                            )
-                            user_data["encrypted_email"] = UserController.encode_email(
-                                user_data["email"]
-                            )
+                        users.find_one_and_update(
+                            {"_id": ObjectId(user_id)}, {"$set": user_data}
+                        )
+                        user = users.find_one({"_id": ObjectId(user_id)})
+                        user_data = User(**user)
+                        user_data = user_data.dict(
+                            exclude_none=True, exclude={"password"}
+                        )
 
-                            user_data.pop("new_password")
-
-                            users.find_one_and_update(
-                                {"_id": ObjectId(user_id)}, {"$set": user_data}
-                            )
-                            user = users.find_one({"_id": ObjectId(user_id)})
-                            user_data = User(**user)
-                            user_data = user_data.dict(
-                                exclude_none=True, exclude={"password"}
-                            )
-
-                            return GlobalController.generate_response(
-                                HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, user_data
-                            )
+                        return GlobalController.generate_response(
+                            HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, user_data
+                        )
 
                 else:
                     return GlobalController.generate_response(

@@ -5,6 +5,7 @@ from flask import request
 from typing import Collection
 from app.extensions import database, mqtt
 from app.middlewares.has_token import has_token
+from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.controllers.global_controller import GlobalController
 from app.models.irrigation_zone import IrrigationZone
 from app.constants.status_code import (
@@ -55,24 +56,18 @@ class ZoneController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     @has_token
     def delete(irrigation_zone_id):
         try:
-            if GlobalController.is_valid_mongodb_id(irrigation_zone_id):
-                irrigation_zones.find_one_and_delete(
-                    {"_id": ObjectId(irrigation_zone_id)}
-                )
-                cultures.delete_many({"irrigation_zone_id": irrigation_zone_id})
-                scheduled_irrigations.delete_many(
-                    {"irrigation_zone_id": irrigation_zone_id}
-                )
-                return GlobalController.generate_response(
-                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone_id
-                )
-            else:
-                return GlobalController.generate_response(
-                    HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
-                )
+            irrigation_zones.find_one_and_delete({"_id": ObjectId(irrigation_zone_id)})
+            cultures.delete_many({"irrigation_zone_id": irrigation_zone_id})
+            scheduled_irrigations.delete_many(
+                {"irrigation_zone_id": irrigation_zone_id}
+            )
+            return GlobalController.generate_response(
+                HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone_id
+            )
 
             raise Exception()
         except:
@@ -80,6 +75,7 @@ class ZoneController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     @has_token
     def update(irrigation_zone_id):
         """
@@ -137,21 +133,16 @@ class ZoneController:
         includes_params = GlobalController.includes_all_required_params(params, body)
         try:
             if includes_params:
-                if GlobalController.is_valid_mongodb_id(irrigation_zone_id):
-                    body["user_id"] = ObjectId(body["user_id"])
-                    irrigation_zone = IrrigationZone(**body)
-                    irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
-                    irrigation_zones.find_one_and_update(
-                        {"_id": ObjectId(irrigation_zone_id)},
-                        {"$set": irrigation_zone_data},
-                    )
-                    return GlobalController.generate_response(
-                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone_id
-                    )
-                else:
-                    return GlobalController.generate_response(
-                        HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
-                    )
+                body["user_id"] = ObjectId(body["user_id"])
+                irrigation_zone = IrrigationZone(**body)
+                irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
+                irrigation_zones.find_one_and_update(
+                    {"_id": ObjectId(irrigation_zone_id)},
+                    {"$set": irrigation_zone_data},
+                )
+                return GlobalController.generate_response(
+                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone_id
+                )
 
             raise Exception()
         except:
@@ -159,16 +150,16 @@ class ZoneController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     def show(zone_id):
         try:
             irrigation_zone = None
-            valid_id = GlobalController.is_valid_mongodb_id(zone_id)
-            if valid_id:
-                irrigation_zone = irrigation_zones.find_one({"_id": ObjectId(zone_id)})
-                if irrigation_zone != None:
-                    return GlobalController.generate_response(
-                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone
-                    )
+
+            irrigation_zone = irrigation_zones.find_one({"_id": ObjectId(zone_id)})
+            if irrigation_zone != None:
+                return GlobalController.generate_response(
+                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, irrigation_zone
+                )
             return GlobalController.generate_response(
                 HTTP_NOT_FOUND_CODE, ZONE_NOT_FOUND_MESSAGE
             )
@@ -177,6 +168,7 @@ class ZoneController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     def list(user_id):
         irrigation_zone_list = irrigation_zones.find({"user_id": ObjectId(user_id)})
         data = []

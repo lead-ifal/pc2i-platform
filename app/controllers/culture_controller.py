@@ -3,6 +3,7 @@ from bson import ObjectId
 from datetime import datetime
 from app.extensions import database
 from app.controllers.global_controller import GlobalController
+from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.middlewares.has_token import has_token
 from app.models.culture import Culture
 from app.constants.status_code import (
@@ -70,25 +71,21 @@ class CultureController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     @has_token
     def delete(culture_id):
         try:
-            valid_id = GlobalController.is_valid_mongodb_id(culture_id)
-            if valid_id:
-                cultures.find_one_and_delete({"_id": ObjectId(culture_id)})
-                return GlobalController.generate_response(
-                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, culture_id
-                )
-            else:
-                return GlobalController.generate_response(
-                    HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
-                )
+            cultures.find_one_and_delete({"_id": ObjectId(culture_id)})
+            return GlobalController.generate_response(
+                HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, culture_id
+            )
 
         except:
             return GlobalController.generate_response(
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     @has_token
     def update(culture_id):
         body = {**request.form.to_dict(), **request.files.to_dict()}
@@ -105,25 +102,21 @@ class CultureController:
 
                 if "harvest_date" in body:
                     body["harvest_date"] = datetime.fromisoformat(body["harvest_date"])
-                if GlobalController.is_valid_mongodb_id(culture_id):
-                    body["irrigation_zone_id"] = ObjectId(body["irrigation_zone_id"])
-                    culture = Culture(**body)
-                    culture_data = culture.dict(exclude_none=True)
-                    if "image" in body:
-                        now = datetime.now().strftime("%Y%m%d%H%M%S")
-                        image_filename = "{}-{}".format(now, body["image"].filename)
-                        culture_data["image"] = image_filename
-                        database.save_file(image_filename, body["image"])
-                    cultures.find_one_and_update(
-                        {"_id": ObjectId(culture_id)}, {"$set": culture_data}
-                    )
-                    return GlobalController.generate_response(
-                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, culture_data
-                    )
-                else:
-                    return GlobalController.generate_response(
-                        HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
-                    )
+
+                body["irrigation_zone_id"] = ObjectId(body["irrigation_zone_id"])
+                culture = Culture(**body)
+                culture_data = culture.dict(exclude_none=True)
+                if "image" in body:
+                    now = datetime.now().strftime("%Y%m%d%H%M%S")
+                    image_filename = "{}-{}".format(now, body["image"].filename)
+                    culture_data["image"] = image_filename
+                    database.save_file(image_filename, body["image"])
+                cultures.find_one_and_update(
+                    {"_id": ObjectId(culture_id)}, {"$set": culture_data}
+                )
+                return GlobalController.generate_response(
+                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, culture_data
+                )
 
             raise Exception()
 
@@ -132,6 +125,7 @@ class CultureController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     def list(irrigation_zone_id):
         try:
             culture_list = cultures.find(
@@ -151,22 +145,17 @@ class CultureController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     def show(culture_id):
         try:
             data = None
-            valid_id = GlobalController.is_valid_mongodb_id(culture_id)
 
-            if valid_id:
-                data = cultures.find_one({"_id": ObjectId(culture_id)})
+            data = cultures.find_one({"_id": ObjectId(culture_id)})
 
-                if data != None:
-                    return GlobalController.generate_response(
-                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data
-                    )
-
-            return GlobalController.generate_response(
-                HTTP_NOT_FOUND_CODE, CULTURE_NOT_FOUND_MESSAGE
-            )
+            if data != None:
+                return GlobalController.generate_response(
+                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, data
+                )
 
         except:
             return GlobalController.generate_response(
