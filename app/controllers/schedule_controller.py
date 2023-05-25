@@ -3,6 +3,7 @@ from bson import ObjectId
 from flask import request
 from typing import Collection
 from app.extensions import database
+from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.middlewares.has_token import has_token
 from app.models.schedule_irrigation import ScheduleIrrigation
 from app.controllers.global_controller import GlobalController
@@ -23,6 +24,7 @@ scheduled_irrigations: Collection = database.db.scheduled_irrigations
 
 
 class ScheduleController:
+    @check_mongodb_id
     @has_token
     def update_schedule(schedule_id):
         body = request.get_json()
@@ -30,21 +32,16 @@ class ScheduleController:
         includes_params = GlobalController.includes_all_required_params(params, body)
         try:
             if includes_params:
-                if GlobalController.is_valid_mongodb_id(schedule_id):
-                    body["irrigation_zone_id"] = ObjectId(body["irrigation_zone_id"])
-                    scheduling = ScheduleIrrigation(**body)
-                    schedule_irrigation_data = scheduling.dict(exclude_none=True)
-                    scheduled_irrigations.find_one_and_update(
-                        {"_id": ObjectId(schedule_id)},
-                        {"$set": schedule_irrigation_data},
-                    )
-                    return GlobalController.generate_response(
-                        HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, schedule_id
-                    )
-                else:
-                    return GlobalController.generate_response(
-                        HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
-                    )
+                body["irrigation_zone_id"] = ObjectId(body["irrigation_zone_id"])
+                scheduling = ScheduleIrrigation(**body)
+                schedule_irrigation_data = scheduling.dict(exclude_none=True)
+                scheduled_irrigations.find_one_and_update(
+                    {"_id": ObjectId(schedule_id)},
+                    {"$set": schedule_irrigation_data},
+                )
+                return GlobalController.generate_response(
+                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, schedule_id
+                )
 
             raise Exception()
         except:
@@ -52,20 +49,14 @@ class ScheduleController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     @has_token
     def delete_schedule(schedule_id):
         try:
-            if GlobalController.is_valid_mongodb_id(schedule_id):
-                scheduled_irrigations.find_one_and_delete(
-                    {"_id": ObjectId(schedule_id)}
-                )
-                return GlobalController.generate_response(
-                    HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, schedule_id
-                )
-            else:
-                return GlobalController.generate_response(
-                    HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
-                )
+            scheduled_irrigations.find_one_and_delete({"_id": ObjectId(schedule_id)})
+            return GlobalController.generate_response(
+                HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, schedule_id
+            )
 
         except:
             return GlobalController.generate_response(
@@ -96,6 +87,7 @@ class ScheduleController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
+    @check_mongodb_id
     def schedule_irrigation_list(zone_id):
         try:
             filter = {"irrigation_zone_id": ObjectId(zone_id)}
