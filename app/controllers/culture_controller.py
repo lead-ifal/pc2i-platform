@@ -4,6 +4,7 @@ from datetime import datetime
 from app.extensions import database
 from app.controllers.global_controller import GlobalController
 from app.middlewares.check_mongodb_id import check_mongodb_id
+from app.middlewares.access_control import access_control
 from app.middlewares.has_token import has_token
 from app.models.culture import Culture
 from app.constants.status_code import (
@@ -71,6 +72,7 @@ class CultureController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
+    @access_control
     @check_mongodb_id
     @has_token
     def delete(culture_id):
@@ -85,6 +87,7 @@ class CultureController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
+    @access_control
     @check_mongodb_id
     @has_token
     def update(culture_id):
