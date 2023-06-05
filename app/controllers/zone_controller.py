@@ -39,6 +39,8 @@ class ZoneController:
         includes_params = GlobalController.includes_all_required_params(params, body)
         try:
             if includes_params:
+                body["cultures"] = []
+                body["schedules"] = []
                 body["user_id"] = ObjectId(body["user_id"])
                 irrigation_zone = IrrigationZone(**body)
                 irrigation_zone_data = irrigation_zone.dict(exclude_none=True)
