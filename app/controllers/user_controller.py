@@ -233,7 +233,7 @@ class UserController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
-    @access_control
+    @access_control(levels=0)
     @check_mongodb_id
     @has_token
     def update(user_id):

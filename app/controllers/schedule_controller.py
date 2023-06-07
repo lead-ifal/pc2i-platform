@@ -3,9 +3,9 @@ from bson import ObjectId
 from flask import request
 from typing import Collection
 from app.extensions import database
+from app.middlewares.access_control import access_control
 from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.middlewares.has_token import has_token
-from app.middlewares.access_control import access_control
 from app.models.schedule_irrigation import ScheduleIrrigation
 from app.controllers.global_controller import GlobalController
 from app.constants.status_code import (
@@ -26,7 +26,7 @@ irrigation_zones: Collection = database.db.irrigation_zones
 
 
 class ScheduleController:
-    @access_control
+    @access_control(levels=2)
     @check_mongodb_id
     @has_token
     def update_schedule(schedule_id):
@@ -52,7 +52,7 @@ class ScheduleController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
-    @access_control
+    @access_control(levels=2)
     @check_mongodb_id
     @has_token
     def delete_schedule(schedule_id):

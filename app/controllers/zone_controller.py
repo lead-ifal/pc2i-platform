@@ -1,12 +1,12 @@
 import requests
 from bson import ObjectId
+from app.middlewares.access_control import access_control
 from config import Config
 from flask import request
 from typing import Collection
 from app.extensions import database, mqtt
 from app.middlewares.has_token import has_token
 from app.middlewares.check_mongodb_id import check_mongodb_id
-from app.middlewares.access_control import access_control
 from app.controllers.global_controller import GlobalController
 from app.models.irrigation_zone import IrrigationZone
 from app.constants.status_code import (
@@ -59,7 +59,7 @@ class ZoneController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
-    @access_control
+    @access_control(levels=1)
     @check_mongodb_id
     @has_token
     def delete(irrigation_zone_id):
@@ -79,7 +79,7 @@ class ZoneController:
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
 
-    @access_control
+    @access_control(levels=1)
     @check_mongodb_id
     @has_token
     def update(irrigation_zone_id):

@@ -3,6 +3,9 @@ ERROR_MESSAGE = "Não foi possível realizar a operação com os dados informado
 UNAUTHORIZED_MESSAGE = (
     "Para processsar esta requisição, é necessário possuir um token válido"
 )
+UNAUTHORIZED_API_KEY_MESSAGE = (
+    "Para processsar esta requisição, é necessário possuir uma API KEY válida"
+)
 INTERNAL_SERVER_ERROR_MESSAGE = "Erro interno de servidor"
 
 # Not found messages
