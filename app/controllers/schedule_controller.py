@@ -22,6 +22,7 @@ from app.constants.response_messages import (
 from app.constants.required_params import required_params
 
 scheduled_irrigations: Collection = database.db.scheduled_irrigations
+irrigation_zones: Collection = database.db.irrigation_zones
 
 
 class ScheduleController:
@@ -56,7 +57,13 @@ class ScheduleController:
     @has_token
     def delete_schedule(schedule_id):
         try:
-            scheduled_irrigations.find_one_and_delete({"_id": ObjectId(schedule_id)})
+            schedule = scheduled_irrigations.find_one_and_delete(
+                {"_id": ObjectId(schedule_id)}
+            )
+            irrigation_zones.find_one_and_update(
+                {"_id": schedule["irrigation_zone_id"]},
+                {"$pull": {"schedules": schedule["_id"]}},
+            )
             return GlobalController.generate_response(
                 HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, schedule_id
             )
@@ -78,6 +85,10 @@ class ScheduleController:
                 scheduling = ScheduleIrrigation(**body)
                 schedule_irrigation_data = scheduling.dict(exclude_none=True)
                 scheduled_irrigations.insert_one(schedule_irrigation_data)
+                irrigation_zones.find_one_and_update(
+                    {"_id": schedule_irrigation_data["irrigation_zone_id"]},
+                    {"$push": {"schedules": schedule_irrigation_data["_id"]}},
+                )
 
                 return GlobalController.generate_response(
                     HTTP_CREATED_CODE, SUCCESS_MESSAGE, schedule_irrigation_data

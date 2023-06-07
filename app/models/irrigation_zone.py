@@ -7,6 +7,8 @@ from app.models.objectid import PydanticObjectId
 class IrrigationZone(BaseModel):
     id: Optional[PydanticObjectId] = Field(alias="_id")
     user_id: ObjectId
+    cultures: list
+    schedules: list
     name: str
     description: str
     size: float

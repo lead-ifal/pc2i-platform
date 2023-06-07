@@ -61,6 +61,11 @@ class CultureController:
 
                     cultures.insert_one(culture_data)
 
+                    irrigation_zones.find_one_and_update(
+                        {"_id": culture_data["irrigation_zone_id"]},
+                        {"$push": {"cultures": culture_data["_id"]}},
+                    )
+
                     return GlobalController.generate_response(
                         HTTP_CREATED_CODE, SUCCESS_MESSAGE, culture_data
                     )
@@ -77,7 +82,12 @@ class CultureController:
     @has_token
     def delete(culture_id):
         try:
-            cultures.find_one_and_delete({"_id": ObjectId(culture_id)})
+            culture = cultures.find_one_and_delete({"_id": ObjectId(culture_id)})
+
+            irrigation_zones.find_one_and_update(
+                {"_id": culture["irrigation_zone_id"]},
+                {"$pull": {"cultures": culture["_id"]}},
+            )
             return GlobalController.generate_response(
                 HTTP_SUCCESS_CODE, SUCCESS_MESSAGE, culture_id
             )
