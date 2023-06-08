@@ -5,6 +5,7 @@ from bson import ObjectId
 from app.extensions import database
 from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.middlewares.has_token import has_token
+from app.middlewares.access_control import access_control
 from app.models.user import User
 from app.controllers.global_controller import GlobalController
 from app.constants.status_code import (
@@ -232,6 +233,7 @@ class UserController:
                 HTTP_BAD_REQUEST_CODE, ERROR_MESSAGE
             )
 
+    @access_control(levels=0)
     @check_mongodb_id
     @has_token
     def update(user_id):
