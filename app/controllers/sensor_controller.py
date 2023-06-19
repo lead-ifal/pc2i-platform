@@ -37,6 +37,7 @@ class SensorController:
         try:
             if includes_params:
                 body["culture_id"] = ObjectId(body["culture_id"])
+                body["type"] = ObjectId(body["type"])
                 sensor = Sensor(**body)
                 result = sensors.insert_one(sensor.dict(exclude_none=True))
                 sensor_data = sensor.dict(exclude_none=True)
@@ -89,9 +90,8 @@ class SensorController:
             "sensor_id": message.topic.replace("pc2i/", ""),
             "value": message.payload.decode(),
         }
-        print(body)
+        body["sensor_id"] = ObjectId(body["sensor_id"])
         sensor_reading = SensorReading(**body)
-        print(sensor_reading)
         result = sensors_readings.insert_one(sensor_reading.dict(exclude_none=True))
         sensor_reading_data = sensor_reading.dict(exclude_none=True)
         sensor_reading_data["_id"] = result.inserted_id

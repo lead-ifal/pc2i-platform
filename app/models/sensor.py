@@ -8,7 +8,7 @@ class Sensor(BaseModel):
     id: Optional[PydanticObjectId] = Field(alias="_id")
     culture_id: ObjectId
     name: str
-    type: int
+    type: ObjectId
 
     class Config:
         arbitrary_types_allowed = True
