@@ -12,7 +12,7 @@ sensor_types_table = database["sensor_types"]
 
 class SensorRegistration:
     def TrainCreate():
-        url = os.getenv("URL")
+        url = os.getenv("SENSOR_URL")
         peanut_1_id = os.getenv("PEANUT_1_ID")
         peanut_2_id = os.getenv("PEANUT_2_ID")
         peanut_3_id = os.getenv("PEANUT_3_ID")
@@ -47,7 +47,7 @@ class SensorRegistration:
             requests.post(url, json=sensor)
 
     def ContextDataPeanutCreate():
-        url = os.getenv("URL")
+        url = os.getenv("SENSOR_URL")
         peanut_1_id = os.getenv("PEANUT_1_ID")
         peanut_2_id = os.getenv("PEANUT_2_ID")
         peanut_3_id = os.getenv("PEANUT_3_ID")
@@ -69,7 +69,7 @@ class SensorRegistration:
             requests.post(url, json=sensor)
 
     def ContextDataMaizeCreate():
-        url = os.getenv("URL")
+        url = os.getenv("SENSOR_URL")
         maize_id = os.getenv("MAIZE_ID")
         sensor = {}
         data_maize = pd.read_csv("csv_files\Context_Data_Maize.csv")
