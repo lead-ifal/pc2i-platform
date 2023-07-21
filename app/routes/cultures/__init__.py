@@ -9,3 +9,6 @@ cultures_bp.route("/irrigation-zone/<irrigation_zone_id>", methods=["GET"])(
     CultureController.list
 )
 cultures_bp.route("/<culture_id>", methods=["GET"])(CultureController.show)
+cultures_bp.route("/<culture_id>/water-need", methods=["GET"])(
+    CultureController.predict
+)
