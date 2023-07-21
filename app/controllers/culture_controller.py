@@ -7,6 +7,10 @@ from app.middlewares.access_control import access_control
 from app.middlewares.check_mongodb_id import check_mongodb_id
 from app.middlewares.has_token import has_token
 from app.models.culture import Culture
+from sklearn.metrics import r2_score
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from app.constants.status_code import (
     HTTP_BAD_REQUEST_CODE,
     HTTP_CREATED_CODE,
@@ -174,3 +178,114 @@ class CultureController:
             return GlobalController.generate_response(
                 HTTP_SERVER_ERROR_CODE, INTERNAL_SERVER_ERROR_MESSAGE
             )
+
+    def linear_regression(features, target):
+        (
+            features_train,
+            features_test,
+            target_train,
+            target_test,
+        ) = train_test_split(features, target, test_size=0.3)
+
+        model = LinearRegression()
+
+        model.fit(features_train, target_train)
+
+        predictions = model.predict(features_test)
+
+        accuracy = r2_score(target_test, predictions)
+
+        return accuracy
+
+    def predict(culture_id):
+        maize = culture_id
+        context = cultures.find_one({"_id": ObjectId(maize)})["context"]
+
+        train = pd.read_csv("data/csv_files/Train.csv")
+        train = train.drop(
+            [
+                "Soil humidity 2",
+                "Irrigation field 2",
+                "Soil humidity 3",
+                "Irrigation field 3",
+                "Soil humidity 4",
+                "Irrigation field 4",
+            ],
+            axis=1,
+        )
+
+        readings = []
+        for index, row in train.iterrows():
+            readings_row = {}
+
+            for column_name, value in row.items():
+                readings_row[column_name] = str(value)
+            readings.append(readings_row)
+
+        for reading in readings:
+            data = datetime.strptime(reading["timestamp"], "%Y-%m-%d %H:%M:%S")
+            for value in context:
+                date = datetime.strptime(value["Date"], "%d-%b")
+                year = "2019"
+                date_with_year = date.replace(year=int(year))
+
+                formatted_date = date_with_year.strftime("%Y-%m-%d")
+                if formatted_date == str(data.date()):
+                    reading.update(value)
+
+        readings_lenght = len(readings)
+        index = 0
+        while index < readings_lenght:
+            reading = readings[index]
+            for value in reading:
+                if reading[value] == "nan":
+                    readings.remove(reading)
+                    index = index - 1
+                    readings_lenght = readings_lenght - 1
+                    break
+            index = index + 1
+
+        data = pd.DataFrame(readings)
+
+        data = data.drop(
+            [
+                "Date",
+                "timestamp",
+            ],
+            axis=1,
+        )
+
+        features = data[
+            [
+                "Soil humidity 1",
+                "Irrigation field 1",
+                "Air temperature (C)",
+                "Air humidity (%)",
+                "Pressure (KPa)",
+                "Wind speed (Km/h)",
+                "Wind gust (Km/h)",
+                "Wind direction (Deg)",
+                "Min_Temp",
+                "Max_Temp",
+                "Humidity",
+                "Wind_Speed",
+                "Solar_Irradiance",
+                "Sun",
+                "Kc",
+                "ETc",
+                "ETo",
+                "Rainfall",
+            ]
+        ]
+
+        target_1day = data["Water_Need_1day"]
+        target_2days = data["Water_Need_2days"]
+        target_3days = data["Water_Need_3days"]
+
+        r2_score_1day = CultureController.linear_regression(features, target_1day)
+        r2_score_2days = CultureController.linear_regression(features, target_2days)
+        r2_score_3days = CultureController.linear_regression(features, target_3days)
+
+        return_message = f"r2_score_1day:  {r2_score_1day}, r2_score_2days:  {r2_score_2days},  r2_score_3days:  {r2_score_3days}"
+
+        return return_message
