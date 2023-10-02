@@ -1,3 +1,6 @@
+### English version
+To access the English version click here: [**English version**](README_ENGLISH.md) 
+
 # PC2I - Platform
 Repositório de código da plataforma e API para gerenciamento de irrigação promovido pelo projeto PC2I.
 
