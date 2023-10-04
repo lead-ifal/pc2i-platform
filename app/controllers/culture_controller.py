@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, Response
 from bson import ObjectId
 from datetime import datetime
 from app.extensions import database
@@ -11,6 +11,13 @@ from sklearn.metrics import r2_score
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+from keras.layers import LSTM, Dense
+from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+from io import BytesIO
+from sklearn.svm import SVR
+import numpy as np
+from keras.models import Sequential
 from app.constants.status_code import (
     HTTP_BAD_REQUEST_CODE,
     HTTP_CREATED_CODE,
@@ -197,6 +204,39 @@ class CultureController:
 
         return accuracy
 
+    def create_dataset(dataset, look_back=1):
+        dataX, dataY = [], []
+        for i in range(len(dataset) - look_back - 1):
+            a = dataset[i : (i + look_back), 0]
+            dataX.append(a)
+            dataY.append(dataset[i + look_back, 0])
+        return np.array(dataX), np.array(dataY)
+
+    def lstm(dataset):
+        train, test = train_test_split(dataset, test_size=0.3)
+        scaler = MinMaxScaler(feature_range=(0, 1))
+        train = scaler.fit_transform(np.array(train).reshape(-1, 1))
+        test = scaler.transform(np.array(test).reshape(-1, 1))
+
+        look_back = 18
+        trainX, trainY = CultureController.create_dataset(train, look_back)
+        testX, testY = CultureController.create_dataset(test, look_back)
+
+        trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+        testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+
+        model = Sequential()
+        model.add(LSTM(4, input_shape=(1, 18)))
+        model.add(Dense(1))
+        model.compile(loss="mean_squared_error", optimizer="adam")
+        model.fit(trainX, trainY, epochs=5, batch_size=1, verbose=2)
+
+        predictions = model.predict(testX)
+
+        accuracy = r2_score(testY, predictions)
+
+        return accuracy
+
     def predict(culture_id):
         maize = culture_id
         context = cultures.find_one({"_id": ObjectId(maize)})["context"]
@@ -282,10 +322,107 @@ class CultureController:
         target_2days = data["Water_Need_2days"]
         target_3days = data["Water_Need_3days"]
 
-        r2_score_1day = CultureController.linear_regression(features, target_1day)
-        r2_score_2days = CultureController.linear_regression(features, target_2days)
-        r2_score_3days = CultureController.linear_regression(features, target_3days)
+        r2_score_1day_lr = CultureController.linear_regression(features, target_1day)
+        r2_score_2days_lr = CultureController.linear_regression(features, target_2days)
+        r2_score_3days_lr = CultureController.linear_regression(features, target_3days)
 
-        return_message = f"r2_score_1day:  {r2_score_1day}, r2_score_2days:  {r2_score_2days},  r2_score_3days:  {r2_score_3days}"
+        lstm_dataset_1 = data[
+            [
+                "Soil humidity 1",
+                "Irrigation field 1",
+                "Air temperature (C)",
+                "Air humidity (%)",
+                "Pressure (KPa)",
+                "Wind speed (Km/h)",
+                "Wind gust (Km/h)",
+                "Wind direction (Deg)",
+                "Min_Temp",
+                "Max_Temp",
+                "Humidity",
+                "Wind_Speed",
+                "Solar_Irradiance",
+                "Sun",
+                "Kc",
+                "ETc",
+                "ETo",
+                "Rainfall",
+                "Water_Need_1day",
+            ]
+        ]
+        lstm_dataset_2 = data[
+            [
+                "Soil humidity 1",
+                "Irrigation field 1",
+                "Air temperature (C)",
+                "Air humidity (%)",
+                "Pressure (KPa)",
+                "Wind speed (Km/h)",
+                "Wind gust (Km/h)",
+                "Wind direction (Deg)",
+                "Min_Temp",
+                "Max_Temp",
+                "Humidity",
+                "Wind_Speed",
+                "Solar_Irradiance",
+                "Sun",
+                "Kc",
+                "ETc",
+                "ETo",
+                "Rainfall",
+                "Water_Need_2days",
+            ]
+        ]
+        lstm_dataset_3 = data[
+            [
+                "Soil humidity 1",
+                "Irrigation field 1",
+                "Air temperature (C)",
+                "Air humidity (%)",
+                "Pressure (KPa)",
+                "Wind speed (Km/h)",
+                "Wind gust (Km/h)",
+                "Wind direction (Deg)",
+                "Min_Temp",
+                "Max_Temp",
+                "Humidity",
+                "Wind_Speed",
+                "Solar_Irradiance",
+                "Sun",
+                "Kc",
+                "ETc",
+                "ETo",
+                "Rainfall",
+                "Water_Need_3days",
+            ]
+        ]
 
-        return return_message
+        r2_score_1day_lstm = CultureController.lstm(lstm_dataset_1)
+        r2_score_2days_lstm = CultureController.lstm(lstm_dataset_2)
+        r2_score_3days_lstm = CultureController.lstm(lstm_dataset_3)
+
+        names = [
+            "LR - 1 Dia",
+            "LSTM - 1 Dia",
+            "LR - 2 Dias",
+            "LSTM - 2 Dias",
+            "LR - 3 Dias",
+            "LSTM - 3 Dias",
+        ]
+        values = [
+            r2_score_1day_lr,
+            r2_score_1day_lstm,
+            r2_score_2days_lr,
+            r2_score_2days_lstm,
+            r2_score_3days_lr,
+            r2_score_3days_lstm,
+        ]
+
+        colors = ["blue", "red"]
+
+        plt.figure(figsize=(10, 6))
+        plt.bar(names, values, color=colors)
+        img_buffer = BytesIO()
+        plt.savefig(img_buffer, format="png")
+        plt.close()
+
+        return Response(img_buffer.getvalue(), content_type="image/png")
